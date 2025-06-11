@@ -86,22 +86,22 @@ export class JavaScriptGenerator extends OutlineGenerator {
         }
         break;
 
-      case 'VariableDeclaration':
-        for (const declarator of node.declarations || []) {
-          if (declarator.id?.name) {
-            // Check if it's a function assignment
-            const isFunctionAssignment = declarator.init && 
-              (declarator.init.type === 'FunctionExpression' || declarator.init.type === 'ArrowFunctionExpression');
+      // case 'VariableDeclaration':
+      //   for (const declarator of node.declarations || []) {
+      //     if (declarator.id?.name) {
+      //       // Check if it's a function assignment
+      //       const isFunctionAssignment = declarator.init && 
+      //         (declarator.init.type === 'FunctionExpression' || declarator.init.type === 'ArrowFunctionExpression');
             
-            elements.push({
-              name: declarator.id.name,
-              type: isFunctionAssignment ? 'function' : 'variable',
-              parameters: isFunctionAssignment ? this.extractParameters(declarator.init.params || []) : undefined,
-              position: declarator.loc ? { line: declarator.loc.start.line, column: declarator.loc.start.column + 1 } : undefined
-            });
-          }
-        }
-        break;
+      //       elements.push({
+      //         name: declarator.id.name,
+      //         type: isFunctionAssignment ? 'function' : 'variable',
+      //         parameters: isFunctionAssignment ? this.extractParameters(declarator.init.params || []) : undefined,
+      //         position: declarator.loc ? { line: declarator.loc.start.line, column: declarator.loc.start.column + 1 } : undefined
+      //       });
+      //     }
+      //   }
+      //   break;
 
       case 'AssignmentExpression':
         // Handle prototype assignments and object method assignments

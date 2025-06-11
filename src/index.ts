@@ -12,6 +12,8 @@ import { XmlGenerator } from './generators/XmlGenerator';
 import { YamlGenerator } from './generators/YamlGenerator';
 import { GeneratorOptions, OutlineNode } from './types';
 import { HtmlGenerator } from './generators/HtmlGenerator';
+import { CsvGenerator } from './generators/CsvGenerator';
+import { CppGenerator } from './generators/code/CppGenerator';
 
 export * from './generators/OutlineGenerator';
 
@@ -30,9 +32,10 @@ export class DocumentOutlineGenerator {
     this.generators.set('xml', new XmlGenerator());
     this.generators.set('yaml', new YamlGenerator());
     this.generators.set('yml', new YamlGenerator());
-    // this.generators.set('html', new HtmlGenerator());
-    // this.generators.set('htm', new HtmlGenerator());
-
+    this.generators.set('html', new HtmlGenerator());
+    this.generators.set('htm', new HtmlGenerator());
+    this.generators.set('csv', new CsvGenerator());
+    
     // Code generators
     this.generators.set('js', new JavaScriptGenerator());
     this.generators.set('jsx', new JavaScriptGenerator());
@@ -41,6 +44,7 @@ export class DocumentOutlineGenerator {
     this.generators.set('py', new PythonGenerator());
     this.generators.set('java', new JavaGenerator());
     this.generators.set('cs', new CSharpGenerator());
+    this.generators.set('cpp', new CppGenerator());
   }
 
   /**

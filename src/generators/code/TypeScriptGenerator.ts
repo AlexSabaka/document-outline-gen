@@ -1,10 +1,10 @@
 import * as acorn from 'acorn';
-import tsPlugin from 'acorn-typescript';
+import { tsPlugin } from 'acorn-typescript';
 
 import { GeneratorOptions, OutlineNode, CodeElement } from '../../types';
 import { OutlineGenerator } from '../OutlineGenerator';
 
-const Parser = acorn.Parser.extend();
+const Parser = acorn.Parser.extend(tsPlugin() as any);
 
 export class TypeScriptGenerator extends OutlineGenerator {
   async generate(content: string, options: GeneratorOptions = {}): Promise<OutlineNode[]> {
@@ -14,7 +14,8 @@ export class TypeScriptGenerator extends OutlineGenerator {
         ecmaVersion: 'latest',
         sourceType: 'module',
         locations: true,
-        //typescript: true
+        // @ts-expect-error
+        typescript: true
       });
 
       const elements = this.extractElements(ast, content);

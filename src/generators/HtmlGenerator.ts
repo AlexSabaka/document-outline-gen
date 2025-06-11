@@ -11,7 +11,7 @@ export class HtmlGenerator extends OutlineGenerator {
       // Extract headings (h1-h6)
       $('h1, h2, h3, h4, h5, h6').each((_, element) => {
         const $el = $(element);
-        const tagName = element.tagName.toLowerCase();
+        const tagName = element.type.toLowerCase();
         const depth = parseInt(tagName.charAt(1));
         const title = $el.text().trim();
         const id = $el.attr('id');
@@ -39,7 +39,7 @@ export class HtmlGenerator extends OutlineGenerator {
       // Extract semantic elements
       $('article, section, nav, aside, main, header, footer').each((_, element) => {
         const $el = $(element);
-        const tagName = element.tagName.toLowerCase();
+        const tagName = element.type.toLowerCase();
         const id = $el.attr('id');
         const className = $el.attr('class');
         const title = id || className || tagName;

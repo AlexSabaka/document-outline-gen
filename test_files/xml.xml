@@ -1,0 +1,91 @@
+<ReceiptTemplate Name="NonFiscalReceipt">
+    <Formatters>
+        <Formatter Name="PriceFormatter">
+            if (int.TryParse(value.ToString(), out var price))
+            {
+                return string.Format("{0:F2} грн.", price / 100.0M);
+            }
+        </Formatter>
+        <Formatter Name="QuantityFormatter">
+            if (int.TryParse(value.ToString(), out var count))
+            {
+                return string.Format("{0:F2} шт.", count / 1000.0M);
+            }
+        </Formatter>
+        <Formatter Name="VolumeFormatter">
+            if (int.TryParse(value.ToString(), out var count))
+            {
+                return string.Format("{0:F2} літри", count / 1000.0M);
+            }
+        </Formatter>
+        <Formatter Name="TimestampFormatter">
+            if (long.TryParse(value.ToString(), out var ts))
+            {
+                var dt = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
+                dt = dt.AddSeconds(ts).ToLocalTime();
+                return dt.ToString();
+            }
+        </Formatter>
+    </Formatters>
+    <Receipt Styles="color: Black; font-family: Consolas; font-size: 10; align: Left;">
+        <Header Styles="align: Center; font-size: 12;">
+            <TextLine Class="center">{AzsName}</TextLine>
+            <TextLine Class="center">{Address}</TextLine>
+            <HorizontalLine Styles="weight: 2;" />
+          <Conditional When="OrderNumber">
+            <Barcode Data="{OrderNumber}" Type="BigNumber" Class="qr-code" Width="256" Height="256" />
+          </Conditional>
+        </Header>
+        <Content>
+            <List Ref="Items">
+                <HorizontalLine Styles="dash: Dash;" />
+                <Conditional When="Count">
+                    <TextLine Class="left">{Count:QuantityFormatter} x {Price:PriceFormatter}</TextLine>
+                </Conditional>
+                <Conditional When="Volume">
+                    <TextLine Class="left">{Volume:VolumeFormatter} x {Price:PriceFormatter}</TextLine>
+                </Conditional>
+                <MergeLines>
+                    <TextLine Class="left">{Description}</TextLine>
+                    <TextLine Class="right" Styles="align: Right;">{ExtendedPrice:PriceFormatter}</TextLine>
+                </MergeLines>
+                <TextLine Class="left">Код: #{UPC}</TextLine>
+                <Conditional When="Discount">
+                    <MergeLines>
+                        <TextLine Class="left">Знижка:</TextLine>
+                        <TextLine Class="right" Styles="align: Right;">{Discount:PriceFormatter}</TextLine>
+                    </MergeLines>
+                </Conditional>
+                <HorizontalLine Styles="dash: Dash;" />
+            </List>
+            <HorizontalLine Styles="weight: 2;" />
+        </Content>
+        <Footer Styles="font-size: 11">
+            <MergeLines>
+                <TextLine Class="total left">СУММА:</TextLine>
+                <TextLine Class="total right" Styles="align: Right;">{TotalSum:PriceFormatter}</TextLine>
+            </MergeLines>
+            <HorizontalLine />
+            <Conditional When="MOP">
+                <TextLine Class="left">{MOP}</TextLine>
+                <Conditional When="FishkaId">
+                    <MergeLines>
+                        <TextLine Class="total left">ТРН:</TextLine>
+                        <TextLine Class="total right" Styles="align: Right;">{FishkaId}</TextLine>
+                    </MergeLines>
+                    <TextLine Class="left">{FishkaText}</TextLine>
+                </Conditional>
+                <HorizontalLine />
+            </Conditional>
+            <TextLine Class="left">Транзакція №{TransactionId}</TextLine>
+            <HorizontalLine />
+            <Content Styles="align: Center; color: Black; font-size: 9;">
+                <TextLine Class="center">Дякуємо за покупку, заходьте ще!</TextLine>
+                <TextLine Class="center">ЧЕК №{ReceiptId} Дата {DateTime:TimestampFormatter}</TextLine>
+                <TextLine Class="center">ФН на чеку: {FiscsalNumber}</TextLine>
+                <TextLine Class="center">Для отримання фіскального чеку,</TextLine>
+                <TextLine Class="center">підійдіть, будь ласка, на касу</TextLine>
+            </Content>
+        </Footer>
+    </Receipt>
+</ReceiptTemplate>

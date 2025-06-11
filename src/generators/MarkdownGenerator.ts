@@ -2,6 +2,13 @@ import { OutlineGenerator } from './OutlineGenerator';
 import { OutlineNode, GeneratorOptions } from '../types';
 import matter from 'gray-matter';
 
+import Parser from "tree-sitter";
+import Markdown from "tree-sitter-markdown";
+
+// const p = new Parser();
+// console.log(Markdown);
+// p.setLanguage(Markdown as Parser.Language);
+
 export class MarkdownGenerator extends OutlineGenerator {
   async generate(content: string, options: GeneratorOptions = {}): Promise<OutlineNode[]> {
     // Parse frontmatter if present
