@@ -19,9 +19,10 @@ program
   .option('-c, --include-comments', 'include comments and docstrings')
   .option('-f, --format <type>', 'output format (json|tree)', 'tree')
   .option('-o, --output <file>', 'output file (default: stdout)')
+  .option('--peggy', 'use Peggy parsers', false)
   .action(async (file: string, options: any) => {
     try {
-      const generator = new DocumentOutlineGenerator();
+      const generator = new DocumentOutlineGenerator({ usePeggyGenerators: options.peggy });
       
       // Check if file exists
       await fs.access(file);
