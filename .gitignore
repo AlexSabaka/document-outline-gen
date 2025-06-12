@@ -138,3 +138,4 @@ examples/*.js*
 examples/*/*.js*
 
 output/
+test_files
