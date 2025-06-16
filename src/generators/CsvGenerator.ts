@@ -1,15 +1,6 @@
 import { GeneratorOptions, OutlineNode } from "../types";
 import { OutlineGenerator } from "./OutlineGenerator";
 
-import Parser from "tree-sitter";
-import { default as csv } from "tree-sitter-csv";
-
-// const parser = new Parser();
-// console.log(csv.csv as Parser.Language);
-// parser.setLanguage(csv.csv as Parser.Language);
-
-// console.log(parser);
-
 interface CsvColumn {
   name: string;
   index: number;
