@@ -4,6 +4,14 @@
   "description": "Universal document outline structure generator for various file types and programming languages",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexSabaka/document-outline-gen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexSabaka/document-outline-gen/issues"
+  },
+  "homepage": "https://github.com/AlexSabaka/document-outline-gen#readme",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -11,6 +19,7 @@
     "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
