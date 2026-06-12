@@ -14,8 +14,10 @@ import { GeneratorOptions, OutlineNode } from './types';
 import { HtmlGenerator } from './generators/HtmlGenerator';
 import { CsvGenerator } from './generators/CsvGenerator';
 import { CppGenerator } from './generators/code/CppGenerator';
+import { UnsupportedExtensionError } from './errors';
 
 export * from './generators/OutlineGenerator';
+export * from './errors';
 
 export class DocumentOutlineGenerator {
   private generators: Map<string, OutlineGenerator> = new Map();
@@ -71,20 +73,63 @@ export class DocumentOutlineGenerator {
   }
 
   /**
-   * Generate outline structure from content string
+   * Generate outline structure from content string.
+   *
+   * Rejects with {@link UnsupportedExtensionError} when no generator is
+   * registered for `fileExtension`. Callers that feed a broad mix of file
+   * types (e.g. kg-gen's reader) should prefer {@link generateFromContentSafe}.
    */
-  public generateFromContent(
-    content: string, 
-    fileExtension: string, 
+  public async generateFromContent(
+    content: string,
+    fileExtension: string,
     options: GeneratorOptions = {}
   ): Promise<OutlineNode[]> {
     const generator = this.generators.get(fileExtension.toLowerCase());
-    
+
     if (!generator) {
-      throw new Error(`No generator found for file extension: ${fileExtension}`);
+      throw new UnsupportedExtensionError(fileExtension.toLowerCase());
     }
 
     return generator.generate(content, options);
+  }
+
+  /**
+   * Like {@link generateFromContent}, but never throws: returns `[]` for
+   * unsupported extensions or on parse failure. Intended for callers that
+   * scan heterogeneous file sets and treat "no outline" as a normal outcome.
+   */
+  public async generateFromContentSafe(
+    content: string,
+    fileExtension: string,
+    options: GeneratorOptions = {}
+  ): Promise<OutlineNode[]> {
+    if (!this.isSupported(fileExtension)) {
+      return [];
+    }
+    try {
+      return await this.generateFromContent(content, fileExtension, options);
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Like {@link generateFromFile}, but never throws: returns `[]` for
+   * unsupported extensions, unreadable files, or parse failure.
+   */
+  public async generateFromFileSafe(
+    filePath: string,
+    options: GeneratorOptions = {}
+  ): Promise<OutlineNode[]> {
+    const extension = path.extname(filePath).slice(1).toLowerCase();
+    if (!this.isSupported(extension)) {
+      return [];
+    }
+    try {
+      return await this.generateFromFile(filePath, options);
+    } catch {
+      return [];
+    }
   }
 
   /**
