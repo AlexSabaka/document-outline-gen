@@ -1,0 +1,172 @@
+[
+  {
+    "title": "Geometry",
+    "type": "namespace",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "Shape",
+        "type": "class",
+        "depth": 2,
+        "line": 5,
+        "metadata": {
+          "visibility": "public",
+          "isAbstract": true
+        },
+        "children": [
+          {
+            "title": "Pi",
+            "type": "field",
+            "depth": 3,
+            "line": 7,
+            "metadata": {
+              "visibility": "public",
+              "dataType": "double"
+            }
+          },
+          {
+            "title": "_area",
+            "type": "field",
+            "depth": 3,
+            "line": 8,
+            "metadata": {
+              "visibility": "private",
+              "dataType": "double"
+            }
+          },
+          {
+            "title": "Shape",
+            "type": "method",
+            "depth": 3,
+            "line": 10,
+            "metadata": {
+              "visibility": "public",
+              "parameters": [
+                {
+                  "name": "area",
+                  "type": "double"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Area",
+            "type": "method",
+            "depth": 3,
+            "line": 15,
+            "metadata": {
+              "visibility": "public",
+              "isAbstract": true,
+              "parameters": [],
+              "returnType": "double"
+            }
+          },
+          {
+            "title": "Count",
+            "type": "method",
+            "depth": 3,
+            "line": 17,
+            "metadata": {
+              "visibility": "protected",
+              "isStatic": true,
+              "parameters": [],
+              "returnType": "int"
+            }
+          },
+          {
+            "title": "Name",
+            "type": "property",
+            "depth": 3,
+            "line": 19,
+            "metadata": {
+              "visibility": "public",
+              "dataType": "string"
+            }
+          }
+        ]
+      },
+      {
+        "title": "IDrawable",
+        "type": "interface",
+        "depth": 2,
+        "line": 22,
+        "metadata": {
+          "visibility": "public"
+        },
+        "children": [
+          {
+            "title": "Draw",
+            "type": "method",
+            "depth": 3,
+            "line": 24,
+            "metadata": {
+              "parameters": [],
+              "returnType": "void"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Color",
+        "type": "enum",
+        "depth": 2,
+        "line": 27,
+        "metadata": {
+          "visibility": "public"
+        },
+        "children": [
+          {
+            "title": "Red",
+            "type": "enum-value",
+            "depth": 3,
+            "line": 29
+          },
+          {
+            "title": "Green",
+            "type": "enum-value",
+            "depth": 3,
+            "line": 30
+          },
+          {
+            "title": "Blue",
+            "type": "enum-value",
+            "depth": 3,
+            "line": 31
+          }
+        ]
+      },
+      {
+        "title": "Point",
+        "type": "struct",
+        "depth": 2,
+        "line": 34,
+        "metadata": {
+          "visibility": "public"
+        },
+        "children": [
+          {
+            "title": "X",
+            "type": "field",
+            "depth": 3,
+            "line": 36,
+            "metadata": {
+              "visibility": "public",
+              "dataType": "int"
+            }
+          },
+          {
+            "title": "Y",
+            "type": "field",
+            "depth": 3,
+            "line": 37,
+            "metadata": {
+              "visibility": "public",
+              "dataType": "int"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
