@@ -1,6 +1,8 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { OutlineGenerator } from './generators/OutlineGenerator';
+import { TreeSitterGenerator } from './generators/code/TreeSitterGenerator';
+import { SymbolTable, SYMBOL_SCHEMA_VERSION, emptySymbolTable } from './symbols';
 import { JavaScriptGenerator } from './generators/code/JavaScriptGenerator';
 import { JsonGenerator } from './generators/JsonGenerator';
 import { MarkdownGenerator } from './generators/MarkdownGenerator';
@@ -35,6 +37,7 @@ import { UnsupportedExtensionError } from './errors';
 export * from './generators/OutlineGenerator';
 export * from './errors';
 export * from './formatters';
+export * from './symbols';
 
 export class DocumentOutlineGenerator {
   private generators: Map<string, OutlineGenerator> = new Map();
@@ -190,6 +193,55 @@ export class DocumentOutlineGenerator {
       return await this.generateFromFile(filePath, options);
     } catch {
       return [];
+    }
+  }
+
+  /**
+   * Enumerate code symbols (definitions + within-file `calls`/`imports` edges)
+   * deterministically, with no network access. Intended to seed downstream
+   * extraction (kg-gen) before any LLM pass. Returns an empty table for
+   * non-code extensions; rejects with {@link UnsupportedExtensionError} for
+   * unknown ones.
+   */
+  public async extractSymbols(
+    content: string,
+    fileExtension: string,
+    options: GeneratorOptions = {},
+  ): Promise<SymbolTable> {
+    const generator = this.generators.get(fileExtension.toLowerCase());
+    if (!generator) {
+      throw new UnsupportedExtensionError(fileExtension.toLowerCase());
+    }
+    if (generator instanceof TreeSitterGenerator) {
+      const { symbols, references } = await generator.extractSymbols(content, options);
+      return { schemaVersion: SYMBOL_SCHEMA_VERSION, symbols, references };
+    }
+    return emptySymbolTable();
+  }
+
+  /** Like {@link extractSymbols}, reading the file from disk. */
+  public async extractSymbolsFromFile(
+    filePath: string,
+    options: GeneratorOptions = {},
+  ): Promise<SymbolTable> {
+    const content = await fs.readFile(filePath, 'utf-8');
+    const extension = path.extname(filePath).slice(1).toLowerCase();
+    return this.extractSymbols(content, extension, {
+      ...options,
+      fileName: path.basename(filePath),
+    });
+  }
+
+  /** Like {@link extractSymbols}, but never throws: empty table on any failure. */
+  public async extractSymbolsSafe(
+    content: string,
+    fileExtension: string,
+    options: GeneratorOptions = {},
+  ): Promise<SymbolTable> {
+    try {
+      return await this.extractSymbols(content, fileExtension, options);
+    } catch {
+      return emptySymbolTable();
     }
   }
 

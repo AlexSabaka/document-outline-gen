@@ -5,6 +5,7 @@ import { OutlineGenerator } from '../OutlineGenerator';
 import { GeneratorOptions, OutlineNode } from '../../types';
 import { OutlineParseError } from '../../errors';
 import { parseDocComment, DocStyle } from '../../docstrings';
+import { SymbolEntry, SymbolReference, SymbolKind } from '../../symbols';
 
 /**
  * Unified tree-sitter outline engine.
@@ -58,11 +59,11 @@ function getParser(grammar: string, language: Parser.Language): Parser {
   return parser;
 }
 
-function getQuery(grammar: string, language: Parser.Language, source: string): Parser.Query {
-  let query = queryCache.get(grammar);
+function getQuery(cacheKey: string, language: Parser.Language, source: string): Parser.Query {
+  let query = queryCache.get(cacheKey);
   if (!query) {
     query = language.query(source);
-    queryCache.set(grammar, query);
+    queryCache.set(cacheKey, query);
   }
   return query;
 }
@@ -76,6 +77,51 @@ interface DefinitionCapture {
 }
 
 const DEFINITION_PREFIX = 'definition.';
+
+/** Capture-kind → stable snake_case SymbolKind (method context handled separately). */
+const KIND_MAP = new Map<string, SymbolKind>([
+  ['function', 'function'],
+  ['method', 'method'],
+  ['constructor', 'constructor'],
+  ['class', 'class'],
+  ['interface', 'interface'],
+  ['struct', 'struct'],
+  ['enum', 'enum'],
+  ['enum-value', 'enum_member'],
+  ['enum-member', 'enum_member'],
+  ['trait', 'trait'],
+  ['type', 'type_alias'],
+  ['typedef', 'type_alias'],
+  ['namespace', 'namespace'],
+  ['module', 'module'],
+  ['mod', 'module'],
+  ['package', 'module'],
+  ['object', 'class'],
+  ['impl', 'class'],
+  ['union', 'struct'],
+  ['field', 'field'],
+  ['property', 'property'],
+  ['interface-property', 'property'],
+  ['interface-method', 'method'],
+  ['const', 'constant'],
+  ['constant', 'constant'],
+  ['variable', 'variable'],
+]);
+
+/** Synthesize a callable signature from extracted metadata, when applicable. */
+function buildSignature(meta: Record<string, unknown>): string | undefined {
+  const params = meta.parameters as Array<{ name: string; type?: string }> | undefined;
+  if (!params) {
+    return undefined;
+  }
+  const inner = params.map((p) => (p.type ? `${p.name}: ${p.type}` : p.name)).join(', ');
+  const ret = meta.returnType ? `: ${meta.returnType}` : '';
+  return `(${inner})${ret}`;
+}
+
+function stripQuotes(value: string): string {
+  return value.replace(/^['"`]|['"`]$/g, '');
+}
 
 export abstract class TreeSitterGenerator extends OutlineGenerator {
   /** Grammar name as published by tree-sitter-wasms (e.g. 'cpp', 'python'). */
@@ -106,7 +152,7 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
       const language = await loadLanguage(this.grammarName);
       const parser = getParser(this.grammarName, language);
       const tree = parser.parse(content);
-      const query = getQuery(this.grammarName, language, this.querySource());
+      const query = getQuery(`${this.grammarName}:outline`, language, this.loadQuerySource('outline')!);
       const defs = this.collectDefinitions(query, tree.rootNode);
       let nodes = this.buildOutline(defs, content, options);
       if (options.groupOverloads) {
@@ -185,17 +231,166 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
     return null;
   }
 
+  /**
+   * Whether a definition is exported / publicly visible from its module.
+   * Default: wrapped in an `export_statement` (TS/JS), or `metadata.visibility`
+   * is `public` (Java/C#/PHP/Kotlin/Scala). Languages with other conventions
+   * override (Python underscore, Go capitalization, Rust `pub`).
+   */
+  protected isExported(def: DefinitionCapture, content: string): boolean {
+    for (let node: Parser.SyntaxNode | null = def.defNode; node; node = node.parent) {
+      if (node.type === 'export_statement') {
+        return true;
+      }
+      if (node.parent && !this.docWrapperTypes.has(node.parent.type)) {
+        break; // left the wrapper chain without finding an export
+      }
+    }
+    return this.extractMetadata(def, content)?.visibility === 'public';
+  }
+
+  /** Map a capture kind (+ method context) to a stable snake_case SymbolKind. */
+  protected symbolKind(kind: string, isMethod: boolean): SymbolKind {
+    if (isMethod) {
+      return kind === 'constructor' ? 'constructor' : 'method';
+    }
+    return KIND_MAP.get(kind) ?? 'variable';
+  }
+
+  // ---- Symbol API ------------------------------------------------------------
+
+  /**
+   * Deterministic symbol enumeration over the same parse/query infrastructure
+   * as the outline. Returns a flat symbol list (with qualified names, kinds,
+   * spans, export flags and signatures) plus within-file reference edges
+   * (`calls`/`imports`) when a `references.scm` exists for the language.
+   */
+  async extractSymbols(
+    content: string,
+    options: GeneratorOptions = {},
+  ): Promise<{ symbols: SymbolEntry[]; references: SymbolReference[] }> {
+    const language = await loadLanguage(this.grammarName);
+    const parser = getParser(this.grammarName, language);
+    const tree = parser.parse(content);
+    const query = getQuery(`${this.grammarName}:outline`, language, this.loadQuerySource('outline')!);
+    const defs = this.collectDefinitions(query, tree.rootNode);
+
+    const defByKey = new Map<string, DefinitionCapture>();
+    for (const def of defs) {
+      defByKey.set(nodeKey(def.defNode), def);
+    }
+
+    const qnameByKey = new Map<string, string>();
+    const symbols: SymbolEntry[] = [];
+    // defs are sorted parent-before-child, so a parent's qualified name exists
+    // before any node it contains is processed.
+    for (const def of defs) {
+      const name = def.nameNode ? def.nameNode.text : this.unnamed(def);
+      const parentKey = this.nearestEnclosing(def.defNode, defByKey);
+      const parentQName = parentKey ? qnameByKey.get(parentKey) : undefined;
+      const qualifiedName = parentQName ? `${parentQName}.${name}` : name;
+      qnameByKey.set(nodeKey(def.defNode), qualifiedName);
+
+      const isMethod =
+        !!parentKey &&
+        this.functionKinds.has(def.kind) &&
+        this.classLikeKinds.has(defByKey.get(parentKey)!.kind);
+
+      const entry: SymbolEntry = {
+        name,
+        qualifiedName,
+        kind: this.symbolKind(def.kind, isMethod),
+        span: {
+          startLine: def.defNode.startPosition.row + 1,
+          endLine: def.defNode.endPosition.row + 1,
+        },
+        exported: this.isExported(def, content),
+      };
+      const signature = buildSignature(this.extractMetadata(def, content) ?? {});
+      if (signature) {
+        entry.signature = signature;
+      }
+      symbols.push(entry);
+    }
+
+    const references = this.collectReferences(
+      language,
+      tree.rootNode,
+      defByKey,
+      qnameByKey,
+      symbols,
+      options,
+    );
+    return { symbols, references };
+  }
+
+  private collectReferences(
+    language: Parser.Language,
+    root: Parser.SyntaxNode,
+    defByKey: Map<string, DefinitionCapture>,
+    qnameByKey: Map<string, string>,
+    symbols: SymbolEntry[],
+    options: GeneratorOptions,
+  ): SymbolReference[] {
+    const source = this.loadQuerySource('references');
+    if (!source) {
+      return [];
+    }
+    const query = getQuery(`${this.grammarName}:references`, language, source);
+    const fileName = options.fileName ?? '<module>';
+
+    // name -> qualifiedName index (shortest-seen wins, since defs are top-down).
+    const byName = new Map<string, string>();
+    for (const symbol of symbols) {
+      if (!byName.has(symbol.name)) {
+        byName.set(symbol.name, symbol.qualifiedName);
+      }
+    }
+
+    const refs: SymbolReference[] = [];
+    const seen = new Set<string>();
+    const push = (ref: SymbolReference) => {
+      const key = `${ref.kind}|${ref.from}|${ref.to}|${ref.line}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        refs.push(ref);
+      }
+    };
+
+    for (const match of query.matches(root)) {
+      for (const capture of match.captures) {
+        const line = capture.node.startPosition.row + 1;
+        if (capture.name === 'reference.call') {
+          const callee = capture.node.text;
+          const fromKey = this.nearestEnclosing(capture.node, defByKey);
+          const from = fromKey ? qnameByKey.get(fromKey)! : fileName;
+          push({ from, to: byName.get(callee) ?? callee, kind: 'calls', line });
+        } else if (capture.name === 'reference.import') {
+          push({ from: fileName, to: stripQuotes(capture.node.text), kind: 'imports', line });
+        }
+      }
+    }
+    return refs;
+  }
+
   // ---- Internals -------------------------------------------------------------
 
-  private querySource(): string {
+  /**
+   * Load a `.scm` query for this language. `kind` is the file stem
+   * (`outline` | `references`). Returns `undefined` when the file is absent
+   * (e.g. languages without a references query). Cached, with a sentinel for
+   * the missing case so we don't re-stat.
+   */
+  private loadQuerySource(kind: 'outline' | 'references'): string | undefined {
     const name = this.queryName();
-    let source = querySourceCache.get(name);
+    const cacheKey = `${name}/${kind}`;
+    let source = querySourceCache.get(cacheKey);
     if (source === undefined) {
-      const file = path.join(__dirname, '..', '..', 'queries', name, 'outline.scm');
-      source = fs.readFileSync(file, 'utf-8');
-      querySourceCache.set(name, source);
+      const file = path.join(__dirname, '..', '..', 'queries', name, `${kind}.scm`);
+      source = fs.existsSync(file) ? fs.readFileSync(file, 'utf-8') : '';
+      querySourceCache.set(cacheKey, source);
     }
-    return source;
+    return source === '' ? undefined : source;
   }
 
   private collectDefinitions(query: Parser.Query, root: Parser.SyntaxNode): DefinitionCapture[] {

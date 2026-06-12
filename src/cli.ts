@@ -60,6 +60,21 @@ program
   });
 
 program
+  .command('symbols <file>')
+  .description('Extract a deterministic symbol table (code files)')
+  .action(async (file: string) => {
+    try {
+      const generator = new DocumentOutlineGenerator();
+      await fs.access(file);
+      const table = await generator.extractSymbolsFromFile(file);
+      console.log(JSON.stringify(table, null, 2));
+    } catch (error) {
+      console.error('Error:', error instanceof Error ? error.message : 'Unknown error');
+      process.exit(1);
+    }
+  });
+
+program
   .command('list-extensions')
   .description('List all supported file extensions')
   .action(() => {
