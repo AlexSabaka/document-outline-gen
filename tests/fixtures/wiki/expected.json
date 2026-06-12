@@ -1,0 +1,45 @@
+[
+  {
+    "title": "Overview",
+    "type": "heading",
+    "depth": 1,
+    "line": 1
+  },
+  {
+    "title": "Installation",
+    "type": "heading",
+    "depth": 1,
+    "line": 5,
+    "children": [
+      {
+        "title": "Linux",
+        "type": "heading",
+        "depth": 2,
+        "line": 7,
+        "children": [
+          {
+            "title": "syntaxhighlight",
+            "type": "block",
+            "depth": 3,
+            "line": 9,
+            "metadata": {
+              "language": "bash"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Windows",
+        "type": "heading",
+        "depth": 2,
+        "line": 13
+      }
+    ]
+  },
+  {
+    "title": "See also",
+    "type": "heading",
+    "depth": 1,
+    "line": 15
+  }
+]

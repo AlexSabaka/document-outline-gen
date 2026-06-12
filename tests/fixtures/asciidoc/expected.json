@@ -1,0 +1,55 @@
+[
+  {
+    "title": "Document Title",
+    "type": "heading",
+    "depth": 1,
+    "line": 1,
+    "children": [
+      {
+        "title": "Installation",
+        "type": "heading",
+        "depth": 2,
+        "line": 3,
+        "children": [
+          {
+            "title": "source",
+            "type": "block",
+            "depth": 3,
+            "line": 5,
+            "metadata": {
+              "language": "bash"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Usage",
+        "type": "heading",
+        "depth": 2,
+        "line": 10,
+        "children": [
+          {
+            "title": "Basic",
+            "type": "heading",
+            "depth": 3,
+            "line": 12,
+            "children": [
+              {
+                "title": "NOTE",
+                "type": "block",
+                "depth": 4,
+                "line": 14
+              }
+            ]
+          },
+          {
+            "title": "Advanced",
+            "type": "heading",
+            "depth": 3,
+            "line": 17
+          }
+        ]
+      }
+    ]
+  }
+]

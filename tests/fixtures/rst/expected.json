@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Main Title",
+    "type": "heading",
+    "depth": 1,
+    "line": 2,
+    "children": [
+      {
+        "title": "First Chapter",
+        "type": "heading",
+        "depth": 2,
+        "line": 5,
+        "children": [
+          {
+            "title": "note",
+            "type": "directive",
+            "depth": 3,
+            "line": 8,
+            "metadata": {
+              "argument": "Something important."
+            }
+          }
+        ]
+      },
+      {
+        "title": "Second Chapter",
+        "type": "heading",
+        "depth": 2,
+        "line": 10,
+        "children": [
+          {
+            "title": "code-block",
+            "type": "directive",
+            "depth": 3,
+            "line": 13,
+            "metadata": {
+              "argument": "python"
+            }
+          },
+          {
+            "title": "Subsection A",
+            "type": "heading",
+            "depth": 3,
+            "line": 17
+          },
+          {
+            "title": "Subsection B",
+            "type": "heading",
+            "depth": 3,
+            "line": 20
+          }
+        ]
+      }
+    ]
+  }
+]

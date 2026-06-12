@@ -1,0 +1,15 @@
+== Overview ==
+
+Some introduction.
+
+== Installation ==
+
+=== Linux ===
+
+<syntaxhighlight lang="bash">
+apt install foo
+</syntaxhighlight>
+
+=== Windows ===
+
+== See also ==

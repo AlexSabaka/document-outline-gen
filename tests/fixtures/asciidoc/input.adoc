@@ -1,0 +1,17 @@
+= Document Title
+
+== Installation
+
+[source,bash]
+----
+npm install document-outline-gen
+----
+
+== Usage
+
+=== Basic
+
+[NOTE]
+This is a note.
+
+=== Advanced

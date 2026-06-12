@@ -25,6 +25,11 @@ import { LuaGenerator } from './generators/code/LuaGenerator';
 import { TomlGenerator } from './generators/code/TomlGenerator';
 import { IniGenerator } from './generators/IniGenerator';
 import { PropertiesGenerator } from './generators/PropertiesGenerator';
+import { RstGenerator } from './generators/RstGenerator';
+import { AsciidocGenerator } from './generators/AsciidocGenerator';
+import { LatexGenerator } from './generators/LatexGenerator';
+import { OrgGenerator } from './generators/OrgGenerator';
+import { WikiGenerator } from './generators/WikiGenerator';
 import { UnsupportedExtensionError } from './errors';
 
 export * from './generators/OutlineGenerator';
@@ -87,6 +92,21 @@ export class DocumentOutlineGenerator {
     const properties = new PropertiesGenerator();
     this.generators.set('properties', properties);
     this.generators.set('env', properties);
+
+    // Phase 6 markup formats
+    const rst = new RstGenerator();
+    this.generators.set('rst', rst);
+    this.generators.set('rest', rst);
+    const asciidoc = new AsciidocGenerator();
+    this.generators.set('adoc', asciidoc);
+    this.generators.set('asciidoc', asciidoc);
+    const latex = new LatexGenerator();
+    this.generators.set('tex', latex);
+    this.generators.set('latex', latex);
+    this.generators.set('org', new OrgGenerator());
+    const wiki = new WikiGenerator();
+    this.generators.set('wiki', wiki);
+    this.generators.set('mediawiki', wiki);
   }
 
   /**

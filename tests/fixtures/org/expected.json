@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Introduction",
+    "type": "heading",
+    "depth": 1,
+    "line": 1
+  },
+  {
+    "title": "Tasks",
+    "type": "heading",
+    "depth": 1,
+    "line": 4,
+    "children": [
+      {
+        "title": "Write parser",
+        "type": "heading",
+        "depth": 2,
+        "line": 5,
+        "metadata": {
+          "todo": "TODO",
+          "priority": "A",
+          "tags": [
+            "work",
+            "urgent"
+          ]
+        }
+      },
+      {
+        "title": "Review code",
+        "type": "heading",
+        "depth": 2,
+        "line": 6,
+        "metadata": {
+          "todo": "DONE"
+        },
+        "children": [
+          {
+            "title": "SRC",
+            "type": "block",
+            "depth": 3,
+            "line": 8,
+            "metadata": {
+              "language": "python"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Conclusion",
+    "type": "heading",
+    "depth": 1,
+    "line": 12
+  }
+]

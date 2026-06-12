@@ -1,0 +1,36 @@
+[
+  {
+    "title": "Introduction",
+    "type": "section",
+    "depth": 1,
+    "line": 4,
+    "children": [
+      {
+        "title": "figure",
+        "type": "environment",
+        "depth": 2,
+        "line": 8
+      },
+      {
+        "title": "Background",
+        "type": "section",
+        "depth": 2,
+        "line": 12
+      }
+    ]
+  },
+  {
+    "title": "Methods",
+    "type": "section",
+    "depth": 1,
+    "line": 14,
+    "children": [
+      {
+        "title": "theorem",
+        "type": "environment",
+        "depth": 2,
+        "line": 16
+      }
+    ]
+  }
+]
