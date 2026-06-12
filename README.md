@@ -228,6 +228,36 @@ exports (`json`/`yaml`/`xml`/`csv`/`sql`) suit tooling and storage; diagram expo
 (`mermaid`/`plantuml`/`dot`/`html`) suit visualization. PDF is intentionally out of scope — use
 `html` + a browser's print-to-PDF.
 
+## 🧬 Symbol API (code)
+
+Beside the outline, `extractSymbols` enumerates code symbols **deterministically and network-free**
+— for AST-seeded extraction pipelines that want the symbol set before any LLM pass. It returns
+definitions for every code language, plus within-file `calls`/`imports` edges for TypeScript,
+JavaScript and Python.
+
+```typescript
+import DocumentOutlineGenerator, { hashContent, SYMBOL_SCHEMA_VERSION } from 'document-outline-gen';
+
+const generator = new DocumentOutlineGenerator();
+const table = await generator.extractSymbols(source, 'ts');
+// {
+//   schemaVersion: 1,
+//   symbols:    [{ name, qualifiedName, kind, span: { startLine, endLine }, exported, signature? }],
+//   references: [{ from, to, kind: 'calls' | 'imports', line }],
+// }
+
+hashContent(source); // sha256 hex — skip re-parsing unchanged files
+```
+
+`kind` is a small, stable, **snake_case** enum (`function`, `method`, `class`, `interface`, `enum`,
+`enum_member`, `struct`, `trait`, `type_alias`, `field`, `property`, `constant`, `module`, …) meant
+to fold cleanly into a downstream normalized vocabulary. References resolve names **within the file
+only** — cross-file resolution is the consumer's job. Non-code extensions return an empty table.
+The `SymbolTable` shape is versioned (`SYMBOL_SCHEMA_VERSION`) with an exported JSON Schema
+(`SYMBOL_TABLE_JSON_SCHEMA`).
+
+CLI: `document-outline-gen symbols src/app.ts`.
+
 ## ⚙️ Configuration Options
 
 ```typescript

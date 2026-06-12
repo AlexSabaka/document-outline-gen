@@ -2,6 +2,11 @@
 
 > Supersedes `TODO.md` as the planning document. Every TODO item maps to a phase below.
 > Last updated: 2026-06-12.
+>
+> **Status (2026-06-12): Phases 0–8 all implemented** on branch
+> `feat/wasm-engine-phase-0-1` (unpushed). 45 file extensions on the unified tree-sitter engine,
+> 11 output formatters, and the deterministic Symbol API. Deferred (see `TECHDEBT.md`): Dart +
+> Protobuf/GraphQL grammars (runtime pin), PDF export, and reference edges beyond TS/JS/Python.
 
 ## Purpose & primary consumer
 

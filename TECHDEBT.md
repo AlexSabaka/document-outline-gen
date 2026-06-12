@@ -54,3 +54,12 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
 - **PDF export is intentionally deferred (Phase 7).** A headless-browser dep (puppeteer) isn't
   worth it for this library; the supported path is `--format html` piped through a browser's
   print-to-PDF. Revisit only on real demand.
+- **Symbol reference edges are TS/JS/Python only (Phase 8).** `extractSymbols` enumerates
+  definitions for all code languages, but `calls`/`imports` edges need a per-language
+  `queries/<lang>/references.scm` and only ship for TS/JS/Python (kg-gen's near-term corpora; it
+  explicitly defers Go/C/C++ call precision). Other code languages return symbols with
+  `references: []` — drop in a `references.scm` to light each up.
+- **Symbol edges are coarse by design (Phase 8).** `imports` edges carry the module specifier, not
+  per-imported-name edges; within-file call resolution is name-based (no type/overload resolution).
+  Adequate for seeding a downstream extractor, not a precise call graph — the latter is the
+  consumer's job (cross-file) or a future refinement.
