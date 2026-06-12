@@ -1,6 +1,7 @@
 import Parser from 'web-tree-sitter';
 import { TreeSitterGenerator, DefinitionCapture } from './TreeSitterGenerator';
 import { Parameter } from '../../types';
+import { DocStyle } from '../../docstrings';
 
 /**
  * C# outline generator (tree-sitter).
@@ -12,6 +13,7 @@ import { Parameter } from '../../types';
  */
 export class CSharpGenerator extends TreeSitterGenerator {
   protected readonly grammarName = 'c_sharp';
+  protected readonly docStyle: DocStyle = 'xmldoc';
 
   // grammar is `c_sharp`, but the query lives under the conventional `csharp/`
   protected queryName(): string {
@@ -46,6 +48,10 @@ export class CSharpGenerator extends TreeSitterGenerator {
     const returnType = node.childForFieldName('type'); // constructors have none
     if (returnType) {
       meta.returnType = returnType.text;
+    }
+    const typeParams = node.childForFieldName('type_parameters');
+    if (typeParams) {
+      meta.typeParameters = typeParams.text;
     }
     return meta;
   }

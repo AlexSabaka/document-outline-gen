@@ -4,6 +4,7 @@ import Parser from 'web-tree-sitter';
 import { OutlineGenerator } from '../OutlineGenerator';
 import { GeneratorOptions, OutlineNode } from '../../types';
 import { OutlineParseError } from '../../errors';
+import { parseDocComment, DocStyle } from '../../docstrings';
 
 /**
  * Unified tree-sitter outline engine.
@@ -89,6 +90,12 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
   /** Type to assign when a function is reclassified as a member. */
   protected methodType = 'method';
 
+  /** Doc-comment style used to parse leading comments into `metadata.doc`. */
+  protected readonly docStyle: DocStyle = 'jsdoc';
+
+  /** Node types to climb past when locating a definition's leading comment. */
+  protected docWrapperTypes = new Set<string>(['export_statement']);
+
   /** Query subdirectory under `queries/`; defaults to the grammar name. */
   protected queryName(): string {
     return this.grammarName;
@@ -101,7 +108,10 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
       const tree = parser.parse(content);
       const query = getQuery(this.grammarName, language, this.querySource());
       const defs = this.collectDefinitions(query, tree.rootNode);
-      const nodes = this.buildOutline(defs, content);
+      let nodes = this.buildOutline(defs, content, options);
+      if (options.groupOverloads) {
+        nodes = this.groupOverloads(nodes);
+      }
       return this.filterByDepth(nodes, options.maxDepth);
     } catch (err) {
       const fallback = this.fallback(content, options);
@@ -135,6 +145,34 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
     _content: string,
   ): Record<string, unknown> | undefined {
     return undefined;
+  }
+
+  /**
+   * Locate and clean a definition's doc comment. Default: the contiguous run of
+   * comment nodes immediately preceding the definition (or its wrapper, e.g.
+   * `export_statement`). Python overrides this to read the body's first string.
+   * Only called when `options.includeComments` is set.
+   */
+  protected extractDocstring(def: DefinitionCapture, _content: string): string | undefined {
+    let anchor = def.defNode;
+    while (anchor.parent && this.docWrapperTypes.has(anchor.parent.type)) {
+      anchor = anchor.parent;
+    }
+    const comments: Parser.SyntaxNode[] = [];
+    let below: Parser.SyntaxNode = anchor;
+    let prev = anchor.previousSibling;
+    while (prev && prev.type.includes('comment')) {
+      if (below.startPosition.row - prev.endPosition.row > 1) {
+        break; // a blank line means it is not a doc comment for this node
+      }
+      comments.unshift(prev);
+      below = prev;
+      prev = prev.previousSibling;
+    }
+    if (comments.length === 0) {
+      return undefined;
+    }
+    return this.cleanComment(comments.map((c) => c.text).join('\n')) || undefined;
   }
 
   /** Title for an unnamed definition. */
@@ -190,7 +228,11 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
     return [...byKey.values()].sort((a, b) => a.defNode.startIndex - b.defNode.startIndex);
   }
 
-  private buildOutline(defs: DefinitionCapture[], content: string): OutlineNode[] {
+  private buildOutline(
+    defs: DefinitionCapture[],
+    content: string,
+    options: GeneratorOptions,
+  ): OutlineNode[] {
     const defByKey = new Map<string, DefinitionCapture>();
     for (const def of defs) {
       defByKey.set(nodeKey(def.defNode), def);
@@ -202,7 +244,7 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
     // defs are sorted by start position, so a parent is always processed
     // before any node it contains.
     for (const def of defs) {
-      const node = this.toOutlineNode(def, content);
+      const node = this.toOutlineNode(def, content, options);
       outlineByKey.set(nodeKey(def.defNode), node);
 
       const parentKey = this.nearestEnclosing(def.defNode, defByKey);
@@ -237,24 +279,77 @@ export abstract class TreeSitterGenerator extends OutlineGenerator {
     return undefined;
   }
 
-  private toOutlineNode(def: DefinitionCapture, content: string): OutlineNode {
+  private toOutlineNode(
+    def: DefinitionCapture,
+    content: string,
+    options: GeneratorOptions,
+  ): OutlineNode {
     const title = def.nameNode ? def.nameNode.text : this.unnamed(def);
     const type = this.mapKindToType(def.kind, def.defNode);
     const start = def.defNode.startPosition;
     const end = def.defNode.endPosition;
-    const metadata = this.extractMetadata(def, content);
+    const metadata: Record<string, unknown> = { ...(this.extractMetadata(def, content) ?? {}) };
+
+    if (options.includeComments) {
+      const docstring = this.extractDocstring(def, content);
+      if (docstring) {
+        metadata.docstring = docstring;
+        const doc = parseDocComment(this.docStyle, docstring);
+        if (doc) {
+          metadata.doc = doc;
+        }
+      }
+    }
 
     const node = this.createNode(
       title,
       type,
       1,
       { line: start.row + 1, column: start.column + 1 },
-      metadata && Object.keys(metadata).length > 0 ? metadata : undefined,
+      Object.keys(metadata).length > 0 ? metadata : undefined,
     );
     node.endLine = end.row + 1;
     node.endColumn = end.column + 1;
     node.id = this.generateId(title, type, start.row + 1);
     return node;
+  }
+
+  protected cleanComment(raw: string): string {
+    return raw
+      .split('\n')
+      .map((line) =>
+        line
+          .replace(/^\s*\/\*\*?/, '') // /** or /*
+          .replace(/\*\/\s*$/, '') //    */
+          .replace(/^\s*\/\/\/?/, '') // // or ///
+          .replace(/^\s*\*\s?/, '') //   leading * in block comments
+          .trimEnd(),
+      )
+      .join('\n')
+      .trim();
+  }
+
+  private groupOverloads(nodes: OutlineNode[]): OutlineNode[] {
+    const result: OutlineNode[] = [];
+    const seen = new Map<string, OutlineNode>();
+    for (const node of nodes) {
+      if (node.children && node.children.length > 0) {
+        node.children = this.groupOverloads(node.children);
+      }
+      if (node.type === 'function' || node.type === this.methodType) {
+        const key = `${node.type}:${node.title}`;
+        const existing = seen.get(key);
+        if (existing) {
+          existing.metadata = existing.metadata ?? {};
+          const count = (existing.metadata.overloads as number) ?? 1;
+          existing.metadata.overloads = count + 1;
+          continue; // drop the duplicate sibling
+        }
+        seen.set(key, node);
+      }
+      result.push(node);
+    }
+    return result;
   }
 }
 

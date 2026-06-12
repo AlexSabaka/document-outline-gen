@@ -55,7 +55,11 @@ describe('golden-file outline fixtures', () => {
 
       const ext = inputFile!.split('.').pop()!;
       const content = fs.readFileSync(path.join(fixturePath, inputFile!), 'utf-8');
-      const actual = project(await gen.generateFromContent(content, ext));
+      const optionsPath = path.join(fixturePath, 'options.json');
+      const options = fs.existsSync(optionsPath)
+        ? JSON.parse(fs.readFileSync(optionsPath, 'utf-8'))
+        : {};
+      const actual = project(await gen.generateFromContent(content, ext, options));
 
       const goldenPath = path.join(fixturePath, 'expected.json');
       if (UPDATE || !fs.existsSync(goldenPath)) {

@@ -1,6 +1,7 @@
 import Parser from 'web-tree-sitter';
 import { TreeSitterGenerator, DefinitionCapture } from './TreeSitterGenerator';
 import { Parameter } from '../../types';
+import { DocStyle } from '../../docstrings';
 
 /**
  * Python outline generator (tree-sitter).
@@ -12,6 +13,7 @@ import { Parameter } from '../../types';
  */
 export class PythonGenerator extends TreeSitterGenerator {
   protected readonly grammarName = 'python';
+  protected readonly docStyle: DocStyle = 'pydoc';
 
   getSupportedExtensions(): string[] {
     return ['py'];
@@ -32,10 +34,6 @@ export class PythonGenerator extends TreeSitterGenerator {
 
   private classMetadata(node: Parser.SyntaxNode): Record<string, unknown> | undefined {
     const meta: Record<string, unknown> = {};
-    const doc = this.docstring(node.childForFieldName('body'));
-    if (doc) {
-      meta.docstring = doc;
-    }
     const supers = node.childForFieldName('superclasses');
     if (supers) {
       const bases = supers.namedChildren.map((c) => c.text);
@@ -129,17 +127,27 @@ export class PythonGenerator extends TreeSitterGenerator {
     return 'public';
   }
 
-  private docstring(body: Parser.SyntaxNode | null): string | undefined {
+  /** Python docstring = the first string statement in the body (gated by includeComments). */
+  protected extractDocstring(def: DefinitionCapture): string | undefined {
+    const body = def.defNode.childForFieldName('body');
     if (!body) {
       return undefined;
     }
     const first = body.namedChildren[0];
-    if (first?.type === 'expression_statement') {
-      const expr = first.namedChildren[0];
-      if (expr?.type === 'string') {
-        return expr.text;
-      }
+    if (first?.type !== 'expression_statement') {
+      return undefined;
     }
-    return undefined;
+    const expr = first.namedChildren[0];
+    if (expr?.type !== 'string') {
+      return undefined;
+    }
+    return this.cleanPyString(expr.text);
+  }
+
+  private cleanPyString(text: string): string {
+    return text
+      .replace(/^[rRbBuUfF]*('''|"""|'|")/, '')
+      .replace(/('''|"""|'|")$/, '')
+      .trim();
   }
 }

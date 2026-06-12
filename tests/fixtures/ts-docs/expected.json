@@ -1,0 +1,77 @@
+[
+  {
+    "title": "add",
+    "type": "function",
+    "depth": 1,
+    "line": 7,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "a",
+          "type": "number"
+        },
+        {
+          "name": "b",
+          "type": "number"
+        }
+      ],
+      "returnType": "number",
+      "docstring": "Adds two numbers together.\n@param a the first addend\n@param b the second addend\n@returns the sum",
+      "doc": {
+        "summary": "Adds two numbers together.",
+        "params": [
+          {
+            "name": "a",
+            "description": "the first addend"
+          },
+          {
+            "name": "b",
+            "description": "the second addend"
+          }
+        ],
+        "returns": {
+          "description": "the sum"
+        }
+      }
+    }
+  },
+  {
+    "title": "Greeter",
+    "type": "class",
+    "depth": 1,
+    "line": 12,
+    "metadata": {
+      "docstring": "A greeter.",
+      "doc": {
+        "summary": "A greeter."
+      }
+    },
+    "children": [
+      {
+        "title": "greet",
+        "type": "method",
+        "depth": 2,
+        "line": 17,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "returnType": "void",
+          "docstring": "Greets a person.\n@param name who to greet",
+          "doc": {
+            "summary": "Greets a person.",
+            "params": [
+              {
+                "name": "name",
+                "description": "who to greet"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

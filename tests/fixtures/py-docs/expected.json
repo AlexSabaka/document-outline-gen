@@ -1,0 +1,69 @@
+[
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 1,
+    "metadata": {
+      "visibility": "public",
+      "parameters": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "times",
+          "optional": true,
+          "defaultValue": "1"
+        }
+      ],
+      "docstring": "Greet someone.\n\n    Args:\n        name (str): who to greet\n        times (int): how many times\n\n    Returns:\n        str: the greeting",
+      "doc": {
+        "summary": "Greet someone.",
+        "params": [
+          {
+            "name": "name",
+            "type": "str",
+            "description": "who to greet"
+          },
+          {
+            "name": "times",
+            "type": "int",
+            "description": "how many times"
+          }
+        ],
+        "returns": {
+          "type": "str",
+          "description": "the greeting"
+        }
+      }
+    }
+  },
+  {
+    "title": "Service",
+    "type": "class",
+    "depth": 1,
+    "line": 14,
+    "metadata": {
+      "docstring": "A service object.",
+      "doc": {
+        "summary": "A service object."
+      }
+    },
+    "children": [
+      {
+        "title": "connect",
+        "type": "method",
+        "depth": 2,
+        "line": 17,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "docstring": "Open the connection.",
+          "doc": {
+            "summary": "Open the connection."
+          }
+        }
+      }
+    ]
+  }
+]

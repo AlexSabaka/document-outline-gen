@@ -1,6 +1,7 @@
 import Parser from 'web-tree-sitter';
 import { TreeSitterGenerator, DefinitionCapture } from './TreeSitterGenerator';
 import { Parameter } from '../../types';
+import { DocStyle } from '../../docstrings';
 
 /**
  * Java outline generator (tree-sitter).
@@ -11,6 +12,7 @@ import { Parameter } from '../../types';
  */
 export class JavaGenerator extends TreeSitterGenerator {
   protected readonly grammarName = 'java';
+  protected readonly docStyle: DocStyle = 'javadoc';
 
   getSupportedExtensions(): string[] {
     return ['java'];
@@ -38,6 +40,10 @@ export class JavaGenerator extends TreeSitterGenerator {
     const returnType = node.childForFieldName('type'); // constructors have none
     if (returnType) {
       meta.returnType = returnType.text;
+    }
+    const typeParams = node.childForFieldName('type_parameters');
+    if (typeParams) {
+      meta.typeParameters = typeParams.text;
     }
     return meta;
   }

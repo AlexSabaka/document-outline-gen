@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Calc",
+    "type": "class",
+    "depth": 1,
+    "line": 1,
+    "children": [
+      {
+        "title": "Add",
+        "type": "method",
+        "depth": 2,
+        "line": 3,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [
+            {
+              "name": "a",
+              "type": "int"
+            },
+            {
+              "name": "b",
+              "type": "int"
+            }
+          ],
+          "returnType": "int",
+          "overloads": 3
+        }
+      },
+      {
+        "title": "Reset",
+        "type": "method",
+        "depth": 2,
+        "line": 6,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "void"
+        }
+      }
+    ]
+  }
+]

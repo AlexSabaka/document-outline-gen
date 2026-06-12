@@ -4,9 +4,6 @@
     "type": "class",
     "depth": 1,
     "line": 5,
-    "metadata": {
-      "docstring": "\"\"\"Base animal.\"\"\""
-    },
     "children": [
       {
         "title": "species",

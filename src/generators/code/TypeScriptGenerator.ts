@@ -70,6 +70,10 @@ export class TypeScriptGenerator extends TreeSitterGenerator {
     if (ret) {
       meta.returnType = this.typeText(ret);
     }
+    const typeParams = callable.childForFieldName('type_parameters');
+    if (typeParams) {
+      meta.typeParameters = typeParams.text;
+    }
     const decorators = this.decorators(node);
     if (decorators.length > 0) {
       meta.decorators = decorators;
