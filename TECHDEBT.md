@@ -26,6 +26,11 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
   `tree-sitter-dart.wasm` is grammar ABI version 15, but web-tree-sitter 0.24.7 only loads
   13–14 (`Incompatible language version 15`). Dart is the one ROADMAP Phase 4 language not yet
   shipped; it lands once the runtime upgrade above is done.
+- **Protocol Buffers and GraphQL are deferred (Phase 5).** `tree-sitter-wasms@0.1.13` ships
+  no `proto`/`graphql` grammar (only TOML, of the Phase-5 formats), and `@vscode/tree-sitter-wasm`
+  needs the 0.25 runtime we're pinned away from. Both land when the runtime upgrade lands or an
+  ABI-13/14 wasm source appears — or sooner via hand-written line parsers (the same pattern as
+  `IniGenerator`/`PropertiesGenerator`; both are declarative `keyword Name { … }` IDLs).
 
 ## Notes
 
@@ -33,3 +38,6 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
   Heterogeneous-input callers (kg-gen) should switch to `generateFromContentSafe` /
   `generateFromFileSafe`, which return `[]` instead. kg-gen still calls the throwing variant
   in `src/shared/utils/documentOutline.ts` — switch it over to silence the per-chunk warnings.
+- **Bare `.env` dotfiles don't dispatch by path.** `path.extname('.env')` is `''`, so
+  `generateFromFile('.env')` finds no generator. `*.env` files (e.g. `prod.env`) and direct
+  `generateFromContent(content, 'env')` calls route to `PropertiesGenerator` correctly.

@@ -79,7 +79,7 @@ document-outline-gen list-extensions
 | `.xml` | XML | Element hierarchy, attributes detection |
 | `.yaml`, `.yml` | YAML | Object structure, array handling |
 | `.html`, `.htm` | HTML | Headings, semantic elements (`<section>`, `<article>`, etc.) |
-| `.csv` | CSV | Header columns with inferred data types |
+| `.csv` | CSV | Header columns with inferred `dataType` (string/number/date/bool/email/url) |
 | `.ts`, `.tsx` | TypeScript | Classes, interfaces, functions, types, enums |
 | `.js`, `.jsx` | JavaScript | Classes, functions, variables, methods |
 | `.py` | Python | Classes, functions, methods, properties, decorators (tree-sitter) |
@@ -94,8 +94,13 @@ document-outline-gen list-extensions
 | `.swift` | Swift | Classes, structs, enums, protocols, functions, properties |
 | `.scala`, `.sbt` | Scala | Classes, objects, traits, methods |
 | `.lua` | Lua | Functions, local functions, table functions |
+| `.toml` | TOML | Tables, nested tables, array-of-tables, key/value pairs |
+| `.ini`, `.cfg`, `.conf` | INI | Sections and key/value pairs (`.conf` best-effort) |
+| `.properties`, `.env` | Properties | Flat key/value pairs with values |
 
-All code languages run on a single tree-sitter (WASM) query engine. See [ROADMAP.md](ROADMAP.md).
+All code languages run on a single tree-sitter (WASM) query engine. TOML uses the same engine;
+INI/Properties are line parsers. Protocol Buffers and GraphQL are deferred (no grammar under the
+pinned runtime — see [TECHDEBT.md](TECHDEBT.md)). See [ROADMAP.md](ROADMAP.md).
 
 ## 📊 Output Format
 
