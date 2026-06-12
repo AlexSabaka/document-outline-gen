@@ -1,0 +1,130 @@
+[
+  {
+    "title": "com.example.geometry",
+    "type": "package",
+    "depth": 1,
+    "line": 1
+  },
+  {
+    "title": "java.util.List",
+    "type": "import",
+    "depth": 1,
+    "line": 3
+  },
+  {
+    "title": "Shape",
+    "type": "class",
+    "depth": 1,
+    "line": 6,
+    "metadata": {
+      "visibility": "public",
+      "isAbstract": true
+    },
+    "children": [
+      {
+        "title": "PI",
+        "type": "field",
+        "depth": 2,
+        "line": 7,
+        "metadata": {
+          "visibility": "public",
+          "isStatic": true,
+          "dataType": "double"
+        }
+      },
+      {
+        "title": "area",
+        "type": "field",
+        "depth": 2,
+        "line": 8,
+        "metadata": {
+          "visibility": "private",
+          "dataType": "double"
+        }
+      },
+      {
+        "title": "Shape",
+        "type": "method",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [
+            {
+              "name": "area",
+              "type": "double"
+            }
+          ]
+        }
+      },
+      {
+        "title": "area",
+        "type": "method",
+        "depth": 2,
+        "line": 14,
+        "metadata": {
+          "visibility": "public",
+          "isAbstract": true,
+          "parameters": [],
+          "returnType": "double"
+        }
+      },
+      {
+        "title": "count",
+        "type": "method",
+        "depth": 2,
+        "line": 16,
+        "metadata": {
+          "visibility": "protected",
+          "isStatic": true,
+          "parameters": [],
+          "returnType": "int"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Drawable",
+    "type": "interface",
+    "depth": 1,
+    "line": 21,
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 22,
+        "metadata": {
+          "parameters": [],
+          "returnType": "void"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Color",
+    "type": "enum",
+    "depth": 1,
+    "line": 25,
+    "children": [
+      {
+        "title": "RED",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 26
+      },
+      {
+        "title": "GREEN",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 27
+      },
+      {
+        "title": "BLUE",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 28
+      }
+    ]
+  }
+]
