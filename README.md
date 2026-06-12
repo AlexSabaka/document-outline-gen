@@ -86,6 +86,16 @@ document-outline-gen list-extensions
 | `.java` | Java | Classes, methods, fields, constructors |
 | `.cs` | C# | Classes, methods, properties, events |
 | `.cpp` | C++ | Namespaces, classes, structs, enums, functions, methods (tree-sitter) |
+| `.go` | Go | Structs, interfaces, functions, methods, fields, constants |
+| `.rs` | Rust | Structs, enums, traits, impls, functions, modules |
+| `.rb`, `.rake`, `.gemspec` | Ruby | Modules, classes, methods, singleton methods |
+| `.php`, `.phtml` | PHP | Namespaces, classes, interfaces, traits, methods, properties |
+| `.kt`, `.kts` | Kotlin | Classes, interfaces, objects, functions, properties |
+| `.swift` | Swift | Classes, structs, enums, protocols, functions, properties |
+| `.scala`, `.sbt` | Scala | Classes, objects, traits, methods |
+| `.lua` | Lua | Functions, local functions, table functions |
+
+All code languages run on a single tree-sitter (WASM) query engine. See [ROADMAP.md](ROADMAP.md).
 
 ## 📊 Output Format
 
