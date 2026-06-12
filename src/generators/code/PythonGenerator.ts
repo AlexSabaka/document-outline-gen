@@ -1,183 +1,145 @@
-import { GeneratorOptions, OutlineNode, CodeElement } from "../../types";
-import { OutlineGenerator } from "../OutlineGenerator";
+import Parser from 'web-tree-sitter';
+import { TreeSitterGenerator, DefinitionCapture } from './TreeSitterGenerator';
+import { Parameter } from '../../types';
 
-export class PythonGenerator extends OutlineGenerator {
-  async generate(content: string, options: GeneratorOptions = {}): Promise<OutlineNode[]> {
-    const lines = content.split('\n');
-    const elements = this.extractElements(lines);
-    return this.elementsToOutline(elements, options);
-  }
-
-  private extractElements(lines: string[]): CodeElement[] {
-    const elements: CodeElement[] = [];
-    const classStack: string[] = [];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const trimmedLine = line.trim();
-      const indentLevel = line.length - line.trimStart().length;
-
-      // Skip empty lines and comments
-      if (!trimmedLine || trimmedLine.startsWith('#')) continue;
-
-      // Class definition
-      const classMatch = trimmedLine.match(/^class\s+(\w+)(?:\([^)]*\))?:/);
-      if (classMatch) {
-        const className = classMatch[1];
-        elements.push({
-          name: className,
-          type: 'class',
-          position: { line: i + 1, column: indentLevel + 1 },
-          docstring: this.extractDocstring(lines, i + 1)
-        });
-        
-        // Update class stack based on indentation
-        while (classStack.length > indentLevel / 4) {
-          classStack.pop();
-        }
-        classStack.push(className);
-        continue;
-      }
-
-      // Function/method definition
-      const funcMatch = trimmedLine.match(/^(?:async\s+)?def\s+(\w+)\s*\(([^)]*)\)(?:\s*->\s*[^:]+)?:/);
-      if (funcMatch) {
-        const funcName = funcMatch[1];
-        const params = funcMatch[2];
-        const isMethod = classStack.length > 0 && indentLevel > 0;
-
-        elements.push({
-          name: funcName,
-          type: isMethod ? 'method' : 'function',
-          parameters: this.parseParameters(params),
-          visibility: this.getVisibility(funcName),
-          position: { line: i + 1, column: indentLevel + 1 },
-          docstring: this.extractDocstring(lines, i + 1)
-        });
-        continue;
-      }
-
-      // Variable assignment at class level
-      if (classStack.length > 0) {
-        const varMatch = trimmedLine.match(/^(\w+)\s*[:=]/);
-        if (varMatch && !trimmedLine.includes('def ') && !trimmedLine.includes('class ')) {
-          const varName = varMatch[1];
-          elements.push({
-            name: varName,
-            type: 'property',
-            visibility: this.getVisibility(varName),
-            position: { line: i + 1, column: indentLevel + 1 }
-          });
-        }
-      }
-
-      // Update class stack based on indentation
-      const currentClassLevel = Math.floor(indentLevel / 4);
-      while (classStack.length > currentClassLevel) {
-        classStack.pop();
-      }
-    }
-
-    return elements;
-  }
-
-  private parseParameters(paramString: string): any[] {
-    if (!paramString.trim()) return [];
-
-    return paramString
-      .split(',')
-      .map(param => param.trim())
-      .filter(param => param && param !== 'self' && param !== 'cls')
-      .map(param => {
-        const parts = param.split(':');
-        const nameWithDefault = parts[0].trim();
-        const type = parts[1]?.trim();
-
-        if (nameWithDefault.includes('=')) {
-          const [name, defaultValue] = nameWithDefault.split('=').map(p => p.trim());
-          return {
-            name: name.replace('*', ''),
-            type,
-            optional: true,
-            defaultValue
-          };
-        }
-
-        return {
-          name: nameWithDefault.replace('*', ''),
-          type,
-          optional: nameWithDefault.startsWith('*')
-        };
-      });
-  }
-
-  private getVisibility(name: string): 'public' | 'private' | 'protected' {
-    if (name.startsWith('__') && name.endsWith('__')) return 'public'; // Magic methods
-    if (name.startsWith('__')) return 'private';
-    if (name.startsWith('_')) return 'protected';
-    return 'public';
-  }
-
-  private extractDocstring(lines: string[], startLine: number): string | undefined {
-    if (startLine >= lines.length) return undefined;
-
-    const nextLine = lines[startLine]?.trim();
-    if (nextLine?.startsWith('"""') || nextLine?.startsWith("'''")) {
-      return nextLine;
-    }
-    return undefined;
-  }
-
-  private elementsToOutline(elements: CodeElement[], options: GeneratorOptions): OutlineNode[] {
-    const nodes: OutlineNode[] = [];
-    const classNodes: Map<string, OutlineNode> = new Map();
-
-    for (const element of elements) {
-      const node = this.createNode(
-        element.name,
-        element.type,
-        element.type === 'class' ? 1 : 2,
-        element.position,
-        {
-          visibility: element.visibility,
-          parameters: element.parameters,
-          docstring: element.docstring
-        }
-      );
-
-      node.id = this.generateId(element.name, element.type, element.position?.line);
-
-      if (element.type === 'class') {
-        classNodes.set(element.name, node);
-        nodes.push(node);
-      } else if ((element.type === 'method' || element.type === 'property') && element.position) {
-        // Find the appropriate parent class
-        let parentClass: OutlineNode | undefined;
-        for (const [, classNode] of classNodes.entries()) {
-          if (classNode.line && element.position.line > classNode.line) {
-            if (!parentClass || (parentClass.line && classNode.line > parentClass.line)) {
-              parentClass = classNode;
-            }
-          }
-        }
-
-        if (parentClass) {
-          if (!parentClass.children) parentClass.children = [];
-          parentClass.children.push(node);
-        } else {
-          nodes.push(node);
-        }
-      } else {
-        nodes.push(node);
-      }
-    }
-
-    return this.filterByDepth(nodes, options.maxDepth);
-  }
+/**
+ * Python outline generator (tree-sitter).
+ *
+ * Replaces the former line-by-line regex parser. Structure (classes, methods,
+ * functions, class attributes) comes from `queries/python/outline.scm`; this
+ * subclass adds Python-specific metadata: name-based visibility, typed
+ * parameters with defaults, return types, async flag, base classes, docstrings.
+ */
+export class PythonGenerator extends TreeSitterGenerator {
+  protected readonly grammarName = 'python';
 
   getSupportedExtensions(): string[] {
     return ['py'];
   }
+
+  protected extractMetadata(def: DefinitionCapture): Record<string, unknown> | undefined {
+    switch (def.kind) {
+      case 'class':
+        return this.classMetadata(def.defNode);
+      case 'function':
+        return this.functionMetadata(def);
+      case 'property':
+        return this.propertyMetadata(def);
+      default:
+        return undefined;
+    }
+  }
+
+  private classMetadata(node: Parser.SyntaxNode): Record<string, unknown> | undefined {
+    const meta: Record<string, unknown> = {};
+    const doc = this.docstring(node.childForFieldName('body'));
+    if (doc) {
+      meta.docstring = doc;
+    }
+    const supers = node.childForFieldName('superclasses');
+    if (supers) {
+      const bases = supers.namedChildren.map((c) => c.text);
+      if (bases.length > 0) {
+        meta.bases = bases;
+      }
+    }
+    return Object.keys(meta).length > 0 ? meta : undefined;
+  }
+
+  private functionMetadata(def: DefinitionCapture): Record<string, unknown> {
+    const node = def.defNode;
+    const meta: Record<string, unknown> = {
+      visibility: this.visibility(def.nameNode?.text ?? ''),
+      parameters: this.parseParameters(node.childForFieldName('parameters')),
+    };
+    const ret = node.childForFieldName('return_type');
+    if (ret) {
+      meta.returnType = ret.text;
+    }
+    if (node.text.startsWith('async')) {
+      meta.isAsync = true;
+    }
+    return meta;
+  }
+
+  private propertyMetadata(def: DefinitionCapture): Record<string, unknown> {
+    const meta: Record<string, unknown> = {
+      visibility: this.visibility(def.nameNode?.text ?? ''),
+    };
+    const type = def.defNode.childForFieldName('type');
+    if (type) {
+      meta.dataType = type.text;
+    }
+    return meta;
+  }
+
+  private parseParameters(params: Parser.SyntaxNode | null): Parameter[] {
+    if (!params) {
+      return [];
+    }
+    const result: Parameter[] = [];
+    for (const child of params.namedChildren) {
+      const param = this.paramFrom(child);
+      if (param && param.name !== 'self' && param.name !== 'cls') {
+        result.push(param);
+      }
+    }
+    return result;
+  }
+
+  private paramFrom(node: Parser.SyntaxNode): Parameter | null {
+    switch (node.type) {
+      case 'identifier':
+        return { name: node.text };
+      case 'typed_parameter': {
+        const id = node.namedChildren.find((c) => c.type === 'identifier');
+        const type = node.childForFieldName('type');
+        return { name: id?.text ?? node.text, type: type?.text };
+      }
+      case 'default_parameter': {
+        const name = node.childForFieldName('name');
+        const value = node.childForFieldName('value');
+        return { name: name?.text ?? '', optional: true, defaultValue: value?.text };
+      }
+      case 'typed_default_parameter': {
+        const name = node.childForFieldName('name');
+        const type = node.childForFieldName('type');
+        const value = node.childForFieldName('value');
+        return { name: name?.text ?? '', type: type?.text, optional: true, defaultValue: value?.text };
+      }
+      case 'list_splat_pattern':
+        return { name: `*${node.namedChildren[0]?.text ?? ''}` };
+      case 'dictionary_splat_pattern':
+        return { name: `**${node.namedChildren[0]?.text ?? ''}` };
+      default:
+        return { name: node.text };
+    }
+  }
+
+  private visibility(name: string): 'public' | 'private' | 'protected' {
+    if (name.startsWith('__') && name.endsWith('__')) {
+      return 'public'; // dunder / magic methods
+    }
+    if (name.startsWith('__')) {
+      return 'private';
+    }
+    if (name.startsWith('_')) {
+      return 'protected';
+    }
+    return 'public';
+  }
+
+  private docstring(body: Parser.SyntaxNode | null): string | undefined {
+    if (!body) {
+      return undefined;
+    }
+    const first = body.namedChildren[0];
+    if (first?.type === 'expression_statement') {
+      const expr = first.namedChildren[0];
+      if (expr?.type === 'string') {
+        return expr.text;
+      }
+    }
+    return undefined;
+  }
 }
-
-

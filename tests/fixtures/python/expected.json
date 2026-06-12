@@ -1,0 +1,107 @@
+[
+  {
+    "title": "Animal",
+    "type": "class",
+    "depth": 1,
+    "line": 5,
+    "metadata": {
+      "docstring": "\"\"\"Base animal.\"\"\""
+    },
+    "children": [
+      {
+        "title": "species",
+        "type": "property",
+        "depth": 2,
+        "line": 8,
+        "metadata": {
+          "visibility": "public",
+          "dataType": "str"
+        }
+      },
+      {
+        "title": "__init__",
+        "type": "method",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [
+            {
+              "name": "name",
+              "type": "str"
+            },
+            {
+              "name": "age",
+              "type": "int",
+              "optional": true,
+              "defaultValue": "0"
+            }
+          ]
+        }
+      },
+      {
+        "title": "age",
+        "type": "method",
+        "depth": 2,
+        "line": 15,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "int"
+        }
+      },
+      {
+        "title": "speak",
+        "type": "method",
+        "depth": 2,
+        "line": 18,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "str",
+          "isAsync": true
+        }
+      }
+    ]
+  },
+  {
+    "title": "Dog",
+    "type": "class",
+    "depth": 1,
+    "line": 22,
+    "metadata": {
+      "bases": [
+        "Animal"
+      ]
+    },
+    "children": [
+      {
+        "title": "speak",
+        "type": "method",
+        "depth": 2,
+        "line": 23,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "str"
+        }
+      }
+    ]
+  },
+  {
+    "title": "make_dog",
+    "type": "function",
+    "depth": 1,
+    "line": 27,
+    "metadata": {
+      "visibility": "public",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "str"
+        }
+      ],
+      "returnType": "Dog"
+    }
+  }
+]
