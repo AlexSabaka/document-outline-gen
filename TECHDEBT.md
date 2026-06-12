@@ -46,3 +46,11 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
 - **Bare `.env` dotfiles don't dispatch by path.** `path.extname('.env')` is `''`, so
   `generateFromFile('.env')` finds no generator. `*.env` files (e.g. `prod.env`) and direct
   `generateFromContent(content, 'env')` calls route to `PropertiesGenerator` correctly.
+- **kg-gen still ships its own ascii-tree copy.** Phase 7 made `formatOutline(nodes, 'ascii-tree')`
+  the canonical renderer (byte-identical to the old inline version). `kg-gen/src/shared/utils/
+  documentOutline.ts` should delete its private `formatAsTree`/`formatMetadata` and call the
+  exported formatter so it inherits future improvements (e.g. the `compact` mode). Cross-repo
+  follow-up; not done here.
+- **PDF export is intentionally deferred (Phase 7).** A headless-browser dep (puppeteer) isn't
+  worth it for this library; the supported path is `--format html` piped through a browser's
+  print-to-PDF. Revisit only on real demand.

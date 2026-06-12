@@ -63,11 +63,19 @@ document-outline-gen example.ts
 # With options
 document-outline-gen src/app.py --line-numbers --max-depth 2 --format json
 
+# Export formats: ascii-tree (default), json, yaml, xml, csv, sql, dot, mermaid, plantuml, html
+document-outline-gen src/app.ts --format mermaid
+document-outline-gen data.csv --format sql --output nodes.sql
+
+# Token-lean tree (no line numbers / metadata)
+document-outline-gen src/app.ts --format tree --compact
+
 # Save to file
 document-outline-gen README.md --output outline.json
 
-# List supported extensions
+# List supported extensions / output formats
 document-outline-gen list-extensions
+document-outline-gen list-formats
 ```
 
 ## 📋 Supported File Types
@@ -196,6 +204,29 @@ interface OutlineNode {
   }
 ]
 ```
+
+### Export Formatters
+
+The same outline can be rendered into any registered format from the library:
+
+```typescript
+import DocumentOutlineGenerator, { formatOutline, getFormats } from 'document-outline-gen';
+
+const generator = new DocumentOutlineGenerator();
+const outline = await generator.generateFromFile('./src/app.ts');
+
+getFormats(); // ['ascii-tree','csv','dot','html','json','mermaid','plantuml','sql','tree','xml','yaml']
+
+const tree    = formatOutline(outline, 'ascii-tree', { compact: true }); // token-lean prompt view
+const diagram = formatOutline(outline, 'mermaid');  // classDiagram / flowchart
+const rows    = formatOutline(outline, 'csv');      // path,title,type,depth,line
+const inserts = formatOutline(outline, 'sql');      // CREATE TABLE + INSERTs
+```
+
+`ascii-tree` is the canonical view (kg-gen renders it into `{{fileOutline}}` prompts). Data
+exports (`json`/`yaml`/`xml`/`csv`/`sql`) suit tooling and storage; diagram exports
+(`mermaid`/`plantuml`/`dot`/`html`) suit visualization. PDF is intentionally out of scope — use
+`html` + a browser's print-to-PDF.
 
 ## ⚙️ Configuration Options
 
