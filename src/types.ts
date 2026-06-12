@@ -49,8 +49,25 @@ export interface GeneratorOptions {
   /** Include comments */
   includeComments?: boolean;
 
+  /** Collapse same-name method/function siblings into one node (metadata.overloads) */
+  groupOverloads?: boolean;
+
   /** Custom configuration per generator */
   [key: string]: any;
+}
+
+/** A single documented parameter parsed from a doc comment. */
+export interface DocParam {
+  name: string;
+  type?: string;
+  description?: string;
+}
+
+/** Structured form of a doc comment (JSDoc, Javadoc, C# XML, Python docstring). */
+export interface DocComment {
+  summary?: string;
+  params?: DocParam[];
+  returns?: { type?: string; description?: string };
 }
 
 export interface Position {
