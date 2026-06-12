@@ -139,3 +139,6 @@ examples/*/*.js*
 
 output/
 test_files
+
+# Redundant hand-written declaration — types are emitted to dist/index.d.ts
+/index.d.ts

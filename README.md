@@ -2,13 +2,12 @@
 
 A universal document outline structure generator for various file types and programming languages. Perfect for knowledge graphs, documentation tools, and content analysis.
 
-[![npm version](https://badge.fury.io/js/document-outline-generator.svg)](https://badge.fury.io/js/document-outline-generator)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 🚀 Features
 
-- **Multi-format Support**: Handles documents (Markdown, JSON, XML, YAML, HTML) and code files
-- **Code Analysis**: Deep AST parsing for TypeScript, JavaScript, Python, Java, C#
+- **Multi-format Support**: Handles documents (Markdown, JSON, XML, YAML, HTML, CSV) and code files
+- **Code Analysis**: AST-based parsing for TypeScript, JavaScript, Python, Java, C#, and C++. Python & C++ run on tree-sitter; the engine is migrating to a unified tree-sitter query core — see [ROADMAP.md](ROADMAP.md)
 - **Hierarchical Structure**: Maintains proper parent-child relationships
 - **Rich Metadata**: Line numbers, visibility, parameters, docstrings, and more
 - **Extensible Architecture**: Easy to add support for new file types
@@ -18,20 +17,18 @@ A universal document outline structure generator for various file types and prog
 ## 📦 Installation
 
 ```bash
-npm install document-outline-generator
+# Not yet published to npm — install from GitHub:
+npm install github:AlexSabaka/document-outline-gen
 ```
 
-For CLI usage:
-```bash
-npm install -g document-outline-generator
-```
+The `document-outline-gen` CLI binary is available after install (see [CLI Usage](#cli-usage)).
 
 ## 🎯 Quick Start
 
 ### Basic Usage
 
 ```typescript
-import DocumentOutlineGenerator from 'document-outline-generator';
+import DocumentOutlineGenerator from 'document-outline-gen';
 
 const generator = new DocumentOutlineGenerator();
 
@@ -61,16 +58,16 @@ const outline = await generator.generateFromFile('./src/app.ts', {
 
 ```bash
 # Basic analysis
-document-outline-generator example.ts
+document-outline-gen example.ts
 
 # With options
-document-outline-generator src/app.py --line-numbers --max-depth 2 --format json
+document-outline-gen src/app.py --line-numbers --max-depth 2 --format json
 
 # Save to file
-document-outline-generator README.md --output outline.json
+document-outline-gen README.md --output outline.json
 
 # List supported extensions
-document-outline-generator list-extensions
+document-outline-gen list-extensions
 ```
 
 ## 📋 Supported File Types
@@ -82,11 +79,13 @@ document-outline-generator list-extensions
 | `.xml` | XML | Element hierarchy, attributes detection |
 | `.yaml`, `.yml` | YAML | Object structure, array handling |
 | `.html`, `.htm` | HTML | Headings, semantic elements (`<section>`, `<article>`, etc.) |
+| `.csv` | CSV | Header columns with inferred data types |
 | `.ts`, `.tsx` | TypeScript | Classes, interfaces, functions, types, enums |
 | `.js`, `.jsx` | JavaScript | Classes, functions, variables, methods |
-| `.py` | Python | Classes, functions, methods, properties, decorators |
+| `.py` | Python | Classes, functions, methods, properties, decorators (tree-sitter) |
 | `.java` | Java | Classes, methods, fields, constructors |
 | `.cs` | C# | Classes, methods, properties, events |
+| `.cpp` | C++ | Namespaces, classes, structs, enums, functions, methods (tree-sitter) |
 
 ## 📊 Output Format
 
@@ -199,7 +198,7 @@ interface GeneratorOptions {
 Create your own generator for unsupported file types:
 
 ```typescript
-import { OutlineGenerator, OutlineNode, GeneratorOptions } from 'document-outline-generator';
+import { OutlineGenerator, OutlineNode, GeneratorOptions } from 'document-outline-gen';
 
 class SqlGenerator extends OutlineGenerator {
   async generate(content: string, options: GeneratorOptions = {}): Promise<OutlineNode[]> {
@@ -280,8 +279,8 @@ async function analyzeProject(projectPath: string) {
 ### Setup
 
 ```bash
-git clone https://github.com/your-username/document-outline-generator.git
-cd document-outline-generator
+git clone https://github.com/AlexSabaka/document-outline-gen.git
+cd document-outline-gen
 npm install
 ```
 
@@ -300,33 +299,44 @@ npm run lint:fix     # Fix ESLint issues
 
 ```
 src/
-├── index.ts                    # Main entry point
-├── types.ts                    # TypeScript definitions
+├── index.ts                    # Main entry point + generator registry
+├── types.ts                    # OutlineNode / GeneratorOptions definitions
+├── errors.ts                   # Typed error hierarchy
 ├── cli.ts                      # CLI implementation
 ├── generators/
 │   ├── OutlineGenerator.ts     # Base generator class
-│   ├── MarkdownGenerator.ts    # Markdown support
-│   ├── JsonGenerator.ts        # JSON support
-│   ├── XmlGenerator.ts         # XML support
-│   ├── YamlGenerator.ts        # YAML support
-│   ├── HtmlGenerator.ts        # HTML support
+│   ├── MarkdownGenerator.ts    # Markdown
+│   ├── JsonGenerator.ts        # JSON
+│   ├── XmlGenerator.ts         # XML
+│   ├── YamlGenerator.ts        # YAML
+│   ├── HtmlGenerator.ts        # HTML
+│   ├── CsvGenerator.ts         # CSV
+│   ├── EmptyGenerator.ts       # Empty / fallback
 │   └── code/
-│       ├── TypeScriptGenerator.ts  # TypeScript/JavaScript
-│       ├── PythonGenerator.ts      # Python
-│       ├── JavaGenerator.ts        # Java
-│       └── CSharpGenerator.ts      # C#
+│       ├── TreeSitterGenerator.ts  # Shared WASM tree-sitter base
+│       ├── TypeScriptGenerator.ts  # TypeScript (acorn)
+│       ├── JavaScriptGenerator.ts  # JavaScript (acorn)
+│       ├── PythonGenerator.ts      # Python (tree-sitter)
+│       ├── JavaGenerator.ts        # Java (ANTLR)
+│       ├── CSharpGenerator.ts      # C#
+│       └── CppGenerator.ts         # C++ (tree-sitter)
+├── queries/                    # Per-language tree-sitter .scm query files
 tests/
 ├── DocumentOutlineGenerator.test.ts
-└── fixtures/                   # Test files
+├── golden.test.ts              # Golden-file fixture harness
+└── fixtures/<lang>/            # input.* + expected.json
 ```
 
 ### Adding New Language Support
 
-1. Create a new generator in `src/generators/code/`
-2. Extend the `OutlineGenerator` base class
-3. Implement the `generate()` method
-4. Register it in the main `DocumentOutlineGenerator` class
-5. Add tests for the new generator
+For tree-sitter languages (the target architecture):
+
+1. Add a `src/queries/<lang>/outline.scm` query file
+2. Subclass `TreeSitterGenerator` for the language
+3. Register the extension in `DocumentOutlineGenerator`
+4. Add a `tests/fixtures/<lang>/` golden fixture
+
+See [ROADMAP.md](ROADMAP.md) for the unified engine design.
 
 ## 🤝 Contributing
 

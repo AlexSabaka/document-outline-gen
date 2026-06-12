@@ -7,7 +7,7 @@ import { GeneratorOptions } from './types';
 
 
 program
-  .name('document-outline-generator')
+  .name('document-outline-gen')
   .description('Generate outline structures for various document types and code files')
   .version('1.0.0');
 
