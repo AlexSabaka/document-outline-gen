@@ -21,25 +21,50 @@
             "title": "Shape",
             "type": "method",
             "depth": 3,
-            "line": 7
+            "line": 7,
+            "metadata": {
+              "visibility": "public",
+              "parameters": [
+                {
+                  "name": "area",
+                  "type": "double"
+                }
+              ]
+            }
           },
           {
             "title": "area",
             "type": "method",
             "depth": 3,
-            "line": 8
+            "line": 8,
+            "metadata": {
+              "visibility": "public",
+              "isVirtual": true,
+              "parameters": [],
+              "returnType": "double"
+            }
           },
           {
             "title": "count",
             "type": "method",
             "depth": 3,
-            "line": 9
+            "line": 9,
+            "metadata": {
+              "visibility": "public",
+              "isStatic": true,
+              "parameters": [],
+              "returnType": "int"
+            }
           },
           {
             "title": "area_",
             "type": "field",
             "depth": 3,
-            "line": 12
+            "line": 12,
+            "metadata": {
+              "visibility": "private",
+              "dataType": "double"
+            }
           }
         ]
       },
@@ -53,7 +78,20 @@
         "title": "distance",
         "type": "function",
         "depth": 2,
-        "line": 17
+        "line": 17,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            }
+          ],
+          "returnType": "double"
+        }
       }
     ]
   }

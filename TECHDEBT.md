@@ -22,10 +22,6 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
   `tree-sitter-wasms@0.1.x` (which tops out at 0.1.13). Upgrading the runtime requires a
   0.25-compatible grammar source (e.g. `@vscode/tree-sitter-wasm` or self-built wasm).
   Until then we stay on the 0.24.x API (`Parser.Language.load`, `lang.query`).
-- **C++ metadata is structure-only.** `CppGenerator` emits namespaces/classes/structs/enums/
-  functions/methods/fields with positions, but no parameters/visibility/return types yet
-  (unlike TS/JS/Java/C#, which extract them in Phase 2). Deferred to ROADMAP Phase 3 (metadata
-  depth). C++ is not a kg-gen near-term corpus.
 
 ## Notes
 
