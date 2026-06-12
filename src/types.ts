@@ -11,6 +11,12 @@ export interface OutlineNode {
   /** Column number where this item appears (1-based) */
   column?: number;
 
+  /** Line number where this item ends (1-based). Set by AST-based generators. */
+  endLine?: number;
+
+  /** Column number where this item ends (1-based). Set by AST-based generators. */
+  endColumn?: number;
+
   /** Depth/level of the item (1 for top-level) */
   depth: number;
 

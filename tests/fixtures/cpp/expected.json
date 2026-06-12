@@ -1,0 +1,60 @@
+[
+  {
+    "title": "<string>",
+    "type": "include",
+    "depth": 1,
+    "line": 1
+  },
+  {
+    "title": "geometry",
+    "type": "namespace",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "Shape",
+        "type": "class",
+        "depth": 2,
+        "line": 5,
+        "children": [
+          {
+            "title": "Shape",
+            "type": "method",
+            "depth": 3,
+            "line": 7
+          },
+          {
+            "title": "area",
+            "type": "method",
+            "depth": 3,
+            "line": 8
+          },
+          {
+            "title": "count",
+            "type": "method",
+            "depth": 3,
+            "line": 9
+          },
+          {
+            "title": "area_",
+            "type": "field",
+            "depth": 3,
+            "line": 12
+          }
+        ]
+      },
+      {
+        "title": "Color",
+        "type": "enum",
+        "depth": 2,
+        "line": 15
+      },
+      {
+        "title": "distance",
+        "type": "function",
+        "depth": 2,
+        "line": 17
+      }
+    ]
+  }
+]
