@@ -31,6 +31,11 @@ was resolved by the Phase 2 migration and its test is un-skipped.)
   needs the 0.25 runtime we're pinned away from. Both land when the runtime upgrade lands or an
   ABI-13/14 wasm source appears — or sooner via hand-written line parsers (the same pattern as
   `IniGenerator`/`PropertiesGenerator`; both are declarative `keyword Name { … }` IDLs).
+- **Markup formats are regex parsers, not tree-sitter (Phase 6).** `tree-sitter-wasms@0.1.13`
+  ships no `rst`/`asciidoc`/`latex`/`org`/`wiki` grammar (nor `markdown`), so RST/AsciiDoc/LaTeX/
+  Org/Wiki are hand-written line parsers on the shared `MarkupGenerator` base — appropriate, since
+  markup is line-oriented. The optional `MarkdownGenerator` → `tree-sitter-markdown` migration
+  (ROADMAP Phase 6) stays blocked for the same reason; the current regex Markdown parser is fine.
 
 ## Notes
 

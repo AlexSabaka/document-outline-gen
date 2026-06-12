@@ -97,10 +97,16 @@ document-outline-gen list-extensions
 | `.toml` | TOML | Tables, nested tables, array-of-tables, key/value pairs |
 | `.ini`, `.cfg`, `.conf` | INI | Sections and key/value pairs (`.conf` best-effort) |
 | `.properties`, `.env` | Properties | Flat key/value pairs with values |
+| `.rst`, `.rest` | reStructuredText | Adornment-order section hierarchy, directives |
+| `.adoc`, `.asciidoc` | AsciiDoc | `=`-level headings, source/admonition blocks |
+| `.tex`, `.latex` | LaTeX | `\section`-family hierarchy, selected environments |
+| `.org` | Org-mode | `*`-star headings (TODO/priority/tags), `#+BEGIN` blocks |
+| `.wiki`, `.mediawiki` | Wiki | MediaWiki `== ==` headings, code blocks |
 
 All code languages run on a single tree-sitter (WASM) query engine. TOML uses the same engine;
-INI/Properties are line parsers. Protocol Buffers and GraphQL are deferred (no grammar under the
-pinned runtime — see [TECHDEBT.md](TECHDEBT.md)). See [ROADMAP.md](ROADMAP.md).
+INI/Properties and the markup formats (RST/AsciiDoc/LaTeX/Org/Wiki) are line parsers. Protocol
+Buffers and GraphQL are deferred (no grammar under the pinned runtime — see
+[TECHDEBT.md](TECHDEBT.md)). See [ROADMAP.md](ROADMAP.md).
 
 ## 📊 Output Format
 
