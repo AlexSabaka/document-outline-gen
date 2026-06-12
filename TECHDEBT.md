@@ -4,15 +4,15 @@ Tracked shortcuts and known gaps. See `ROADMAP.md` for the forward plan.
 
 ## Pre-existing parser gaps (surfaced 2026-06-12 when the jest harness was restored)
 
-The test suite never actually ran before (no jest config). Standing it up revealed three
-generators that produce wrong output for cases the legacy tests assert. These are **out of
-scope** for the WASM-engine pass and are marked `it.skip` in
-`tests/DocumentOutlineGenerator.test.ts` with back-references here.
+The test suite never actually ran before (no jest config). Standing it up revealed
+generators that produce wrong output for cases the legacy tests assert. The remaining two are
+**out of scope** for the engine work and are marked `it.skip` in
+`tests/DocumentOutlineGenerator.test.ts` with back-references here. (The acorn-TypeScript gap
+was resolved by the Phase 2 migration and its test is un-skipped.)
 
 | Generator | Symptom | Resolution path |
 |---|---|---|
 | `MarkdownGenerator` | gray-matter frontmatter is parsed away but not exposed as `metadata.frontmatter` | Markdown rework (ROADMAP Phase 6, optional) |
-| `TypeScriptGenerator` (acorn) | returns 0 class members for a basic class | Fixed by the Phase 2 tree-sitter migration; un-skip the test then |
 | `HtmlGenerator` (cheerio) | does not emit `id`'d `<section>` nodes | HTML rework (not currently scheduled) |
 
 ## WASM engine (Phase 1)
@@ -23,8 +23,9 @@ scope** for the WASM-engine pass and are marked `it.skip` in
   0.25-compatible grammar source (e.g. `@vscode/tree-sitter-wasm` or self-built wasm).
   Until then we stay on the 0.24.x API (`Parser.Language.load`, `lang.query`).
 - **C++ metadata is structure-only.** `CppGenerator` emits namespaces/classes/structs/enums/
-  functions/methods/fields with positions, but no parameters/visibility/return types yet.
-  Deferred to ROADMAP Phase 3 (metadata depth). C++ is not a kg-gen near-term corpus.
+  functions/methods/fields with positions, but no parameters/visibility/return types yet
+  (unlike TS/JS/Java/C#, which extract them in Phase 2). Deferred to ROADMAP Phase 3 (metadata
+  depth). C++ is not a kg-gen near-term corpus.
 
 ## Notes
 

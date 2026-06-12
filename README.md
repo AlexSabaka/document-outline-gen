@@ -352,7 +352,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [Acorn](https://github.com/acornjs/acorn) for JavaScript/TypeScript parsing
+- [web-tree-sitter](https://github.com/tree-sitter/tree-sitter) + [tree-sitter-wasms](https://github.com/Gregoor/tree-sitter-wasms) for code parsing (TS, JS, Python, Java, C#, C++)
 - [Gray Matter](https://github.com/jonschlinkert/gray-matter) for frontmatter support
 - [Cheerio](https://github.com/cheeriojs/cheerio) for HTML parsing
 - [Fast XML Parser](https://github.com/NaturalIntelligence/fast-xml-parser) for XML support
