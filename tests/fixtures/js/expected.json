@@ -1,0 +1,95 @@
+[
+  {
+    "title": "Calculator",
+    "type": "class",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "version",
+        "type": "property",
+        "depth": 2,
+        "line": 4,
+        "metadata": {
+          "isStatic": true
+        }
+      },
+      {
+        "title": "constructor",
+        "type": "method",
+        "depth": 2,
+        "line": 6,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "value"
+            }
+          ]
+        }
+      },
+      {
+        "title": "add",
+        "type": "method",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "x"
+            }
+          ]
+        }
+      },
+      {
+        "title": "create",
+        "type": "method",
+        "depth": 2,
+        "line": 14,
+        "metadata": {
+          "isStatic": true,
+          "parameters": []
+        }
+      }
+    ]
+  },
+  {
+    "title": "helper",
+    "type": "function",
+    "depth": 1,
+    "line": 19,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b",
+          "optional": true,
+          "defaultValue": "1"
+        }
+      ]
+    }
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 23,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name"
+        }
+      ]
+    }
+  },
+  {
+    "title": "legacy",
+    "type": "function",
+    "depth": 1,
+    "line": 25,
+    "metadata": {
+      "parameters": []
+    }
+  }
+]
