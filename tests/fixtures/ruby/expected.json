@@ -1,0 +1,63 @@
+[
+  {
+    "title": "Geometry",
+    "type": "module",
+    "depth": 1,
+    "line": 1,
+    "children": [
+      {
+        "title": "Shape",
+        "type": "class",
+        "depth": 2,
+        "line": 2,
+        "children": [
+          {
+            "title": "initialize",
+            "type": "method",
+            "depth": 3,
+            "line": 3,
+            "metadata": {
+              "parameters": [
+                {
+                  "name": "area"
+                }
+              ]
+            }
+          },
+          {
+            "title": "describe",
+            "type": "method",
+            "depth": 3,
+            "line": 7,
+            "metadata": {
+              "parameters": []
+            }
+          },
+          {
+            "title": "create",
+            "type": "method",
+            "depth": 3,
+            "line": 11,
+            "metadata": {
+              "parameters": [],
+              "isStatic": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 17,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 1,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name"
+        }
+      ]
+    }
+  },
+  {
+    "title": "helper",
+    "type": "function",
+    "depth": 1,
+    "line": 5,
+    "metadata": {
+      "parameters": [],
+      "isLocal": true
+    }
+  },
+  {
+    "title": "create",
+    "type": "function",
+    "depth": 1,
+    "line": 9,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "area"
+        }
+      ]
+    }
+  },
+  {
+    "title": "describe",
+    "type": "function",
+    "depth": 1,
+    "line": 13,
+    "metadata": {
+      "parameters": []
+    }
+  }
+]

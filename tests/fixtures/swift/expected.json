@@ -1,0 +1,124 @@
+[
+  {
+    "title": "Drawable",
+    "type": "protocol",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 4,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Shape",
+    "type": "class",
+    "depth": 1,
+    "line": 7,
+    "children": [
+      {
+        "title": "area",
+        "type": "property",
+        "depth": 2,
+        "line": 8,
+        "metadata": {
+          "dataType": "Double"
+        }
+      },
+      {
+        "title": "init",
+        "type": "method",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "area",
+              "type": "Double"
+            }
+          ]
+        }
+      },
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 14,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      },
+      {
+        "title": "create",
+        "type": "method",
+        "depth": 2,
+        "line": 18,
+        "metadata": {
+          "isStatic": true,
+          "parameters": [],
+          "returnType": "Shape"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Point",
+    "type": "struct",
+    "depth": 1,
+    "line": 23,
+    "children": [
+      {
+        "title": "x",
+        "type": "property",
+        "depth": 2,
+        "line": 24,
+        "metadata": {
+          "dataType": "Int"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Color",
+    "type": "enum",
+    "depth": 1,
+    "line": 27,
+    "children": [
+      {
+        "title": "red",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 28
+      },
+      {
+        "title": "green",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 29
+      }
+    ]
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 32,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "returnType": "String"
+    }
+  }
+]

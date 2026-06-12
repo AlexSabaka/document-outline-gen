@@ -1,0 +1,79 @@
+[
+  {
+    "title": "Drawable",
+    "type": "interface",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 4,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Shape",
+    "type": "class",
+    "depth": 1,
+    "line": 7,
+    "metadata": {
+      "isAbstract": true
+    },
+    "children": [
+      {
+        "title": "name",
+        "type": "property",
+        "depth": 2,
+        "line": 8
+      },
+      {
+        "title": "describe",
+        "type": "method",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "isAbstract": true,
+          "parameters": [],
+          "returnType": "String"
+        }
+      },
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 12,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 17,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name",
+          "type": "String"
+        }
+      ],
+      "returnType": "String"
+    }
+  },
+  {
+    "title": "Registry",
+    "type": "object",
+    "depth": 1,
+    "line": 21
+  }
+]

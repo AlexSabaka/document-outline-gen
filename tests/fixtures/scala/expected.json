@@ -1,0 +1,66 @@
+[
+  {
+    "title": "Drawable",
+    "type": "trait",
+    "depth": 1,
+    "line": 3,
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 4,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Shape",
+    "type": "class",
+    "depth": 1,
+    "line": 7,
+    "children": [
+      {
+        "title": "describe",
+        "type": "method",
+        "depth": 2,
+        "line": 8,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      },
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 9,
+        "metadata": {
+          "parameters": [],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Registry",
+    "type": "object",
+    "depth": 1,
+    "line": 12,
+    "children": [
+      {
+        "title": "create",
+        "type": "method",
+        "depth": 2,
+        "line": 13,
+        "metadata": {
+          "parameters": [],
+          "returnType": "Shape"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,89 @@
+[
+  {
+    "title": "Shape",
+    "type": "struct",
+    "depth": 1,
+    "line": 6,
+    "metadata": {
+      "visibility": "public"
+    },
+    "children": [
+      {
+        "title": "Area",
+        "type": "field",
+        "depth": 2,
+        "line": 7,
+        "metadata": {
+          "visibility": "public",
+          "dataType": "float64"
+        }
+      },
+      {
+        "title": "hidden",
+        "type": "field",
+        "depth": 2,
+        "line": 8,
+        "metadata": {
+          "visibility": "private",
+          "dataType": "int"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Drawable",
+    "type": "interface",
+    "depth": 1,
+    "line": 11,
+    "metadata": {
+      "visibility": "public"
+    },
+    "children": [
+      {
+        "title": "Draw",
+        "type": "method",
+        "depth": 2,
+        "line": 12,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "string"
+        }
+      }
+    ]
+  },
+  {
+    "title": "NewShape",
+    "type": "function",
+    "depth": 1,
+    "line": 15,
+    "metadata": {
+      "visibility": "public",
+      "parameters": [
+        {
+          "name": "area",
+          "type": "float64"
+        }
+      ],
+      "returnType": "*Shape"
+    }
+  },
+  {
+    "title": "Describe",
+    "type": "method",
+    "depth": 1,
+    "line": 19,
+    "metadata": {
+      "visibility": "public",
+      "parameters": [],
+      "returnType": "string",
+      "receiver": "(s *Shape)"
+    }
+  },
+  {
+    "title": "Pi",
+    "type": "constant",
+    "depth": 1,
+    "line": 23
+  }
+]

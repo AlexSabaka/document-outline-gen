@@ -14,6 +14,14 @@ import { GeneratorOptions, OutlineNode } from './types';
 import { HtmlGenerator } from './generators/HtmlGenerator';
 import { CsvGenerator } from './generators/CsvGenerator';
 import { CppGenerator } from './generators/code/CppGenerator';
+import { GoGenerator } from './generators/code/GoGenerator';
+import { RustGenerator } from './generators/code/RustGenerator';
+import { RubyGenerator } from './generators/code/RubyGenerator';
+import { PhpGenerator } from './generators/code/PhpGenerator';
+import { KotlinGenerator } from './generators/code/KotlinGenerator';
+import { SwiftGenerator } from './generators/code/SwiftGenerator';
+import { ScalaGenerator } from './generators/code/ScalaGenerator';
+import { LuaGenerator } from './generators/code/LuaGenerator';
 import { UnsupportedExtensionError } from './errors';
 
 export * from './generators/OutlineGenerator';
@@ -47,6 +55,25 @@ export class DocumentOutlineGenerator {
     this.generators.set('java', new JavaGenerator());
     this.generators.set('cs', new CSharpGenerator());
     this.generators.set('cpp', new CppGenerator());
+
+    // Phase 4 languages
+    this.generators.set('go', new GoGenerator());
+    this.generators.set('rs', new RustGenerator());
+    const ruby = new RubyGenerator();
+    this.generators.set('rb', ruby);
+    this.generators.set('rake', ruby);
+    this.generators.set('gemspec', ruby);
+    const php = new PhpGenerator();
+    this.generators.set('php', php);
+    this.generators.set('phtml', php);
+    const kotlin = new KotlinGenerator();
+    this.generators.set('kt', kotlin);
+    this.generators.set('kts', kotlin);
+    this.generators.set('swift', new SwiftGenerator());
+    const scala = new ScalaGenerator();
+    this.generators.set('scala', scala);
+    this.generators.set('sbt', scala);
+    this.generators.set('lua', new LuaGenerator());
   }
 
   /**

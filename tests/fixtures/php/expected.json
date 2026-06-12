@@ -1,0 +1,86 @@
+[
+  {
+    "title": "App\\Geometry",
+    "type": "namespace",
+    "depth": 1,
+    "line": 3
+  },
+  {
+    "title": "Drawable",
+    "type": "interface",
+    "depth": 1,
+    "line": 5,
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 7,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "string"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Shape",
+    "type": "class",
+    "depth": 1,
+    "line": 10,
+    "children": [
+      {
+        "title": "area",
+        "type": "property",
+        "depth": 2,
+        "line": 12,
+        "metadata": {
+          "visibility": "private",
+          "dataType": "float"
+        }
+      },
+      {
+        "title": "__construct",
+        "type": "method",
+        "depth": 2,
+        "line": 14,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [
+            {
+              "name": "$area",
+              "type": "float"
+            }
+          ]
+        }
+      },
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 19,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [],
+          "returnType": "string"
+        }
+      }
+    ]
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 25,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "$name",
+          "type": "string"
+        }
+      ],
+      "returnType": "string"
+    }
+  }
+]

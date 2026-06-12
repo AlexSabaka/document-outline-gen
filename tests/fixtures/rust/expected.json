@@ -1,0 +1,130 @@
+[
+  {
+    "title": "Point",
+    "type": "struct",
+    "depth": 1,
+    "line": 1,
+    "metadata": {
+      "visibility": "public"
+    },
+    "children": [
+      {
+        "title": "x",
+        "type": "field",
+        "depth": 2,
+        "line": 2,
+        "metadata": {
+          "visibility": "public",
+          "dataType": "i32"
+        }
+      },
+      {
+        "title": "y",
+        "type": "field",
+        "depth": 2,
+        "line": 3,
+        "metadata": {
+          "dataType": "i32"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Color",
+    "type": "enum",
+    "depth": 1,
+    "line": 6,
+    "metadata": {
+      "visibility": "public"
+    },
+    "children": [
+      {
+        "title": "Red",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 7
+      },
+      {
+        "title": "Green",
+        "type": "enum-value",
+        "depth": 2,
+        "line": 8
+      }
+    ]
+  },
+  {
+    "title": "Drawable",
+    "type": "trait",
+    "depth": 1,
+    "line": 11,
+    "metadata": {
+      "visibility": "public"
+    },
+    "children": [
+      {
+        "title": "draw",
+        "type": "method",
+        "depth": 2,
+        "line": 12,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "&self"
+            }
+          ],
+          "returnType": "String"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Point",
+    "type": "impl",
+    "depth": 1,
+    "line": 15,
+    "children": [
+      {
+        "title": "new",
+        "type": "method",
+        "depth": 2,
+        "line": 16,
+        "metadata": {
+          "visibility": "public",
+          "parameters": [
+            {
+              "name": "x",
+              "type": "i32"
+            }
+          ],
+          "returnType": "Self"
+        }
+      }
+    ]
+  },
+  {
+    "title": "distance",
+    "type": "function",
+    "depth": 1,
+    "line": 21,
+    "metadata": {
+      "visibility": "public",
+      "parameters": [
+        {
+          "name": "a",
+          "type": "i32"
+        },
+        {
+          "name": "b",
+          "type": "i32"
+        }
+      ],
+      "returnType": "i32"
+    }
+  },
+  {
+    "title": "util",
+    "type": "module",
+    "depth": 1,
+    "line": 25
+  }
+]
