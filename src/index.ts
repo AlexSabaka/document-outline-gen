@@ -41,8 +41,8 @@ export class DocumentOutlineGenerator {
     // Code generators
     this.generators.set('js', new JavaScriptGenerator());
     this.generators.set('jsx', new JavaScriptGenerator());
-    this.generators.set('ts', new TypeScriptGenerator());
-    this.generators.set('tsx', new TypeScriptGenerator());
+    this.generators.set('ts', new TypeScriptGenerator('typescript'));
+    this.generators.set('tsx', new TypeScriptGenerator('tsx'));
     this.generators.set('py', new PythonGenerator());
     this.generators.set('java', new JavaGenerator());
     this.generators.set('cs', new CSharpGenerator());

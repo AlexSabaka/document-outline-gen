@@ -1,0 +1,125 @@
+[
+  {
+    "title": "User",
+    "type": "interface",
+    "depth": 1,
+    "line": 3
+  },
+  {
+    "title": "ID",
+    "type": "type",
+    "depth": 1,
+    "line": 8
+  },
+  {
+    "title": "Color",
+    "type": "enum",
+    "depth": 1,
+    "line": 10
+  },
+  {
+    "title": "Base",
+    "type": "class",
+    "depth": 1,
+    "line": 17,
+    "metadata": {
+      "isAbstract": true,
+      "typeParameters": "<T>",
+      "decorators": [
+        "@Component()"
+      ]
+    },
+    "children": [
+      {
+        "title": "version",
+        "type": "property",
+        "depth": 2,
+        "line": 18,
+        "metadata": {
+          "isStatic": true
+        }
+      },
+      {
+        "title": "value",
+        "type": "property",
+        "depth": 2,
+        "line": 19,
+        "metadata": {
+          "visibility": "protected",
+          "dataType": "T"
+        }
+      },
+      {
+        "title": "constructor",
+        "type": "method",
+        "depth": 2,
+        "line": 21,
+        "metadata": {
+          "parameters": [
+            {
+              "name": "value",
+              "type": "T"
+            }
+          ]
+        }
+      },
+      {
+        "title": "render",
+        "type": "method",
+        "depth": 2,
+        "line": 25,
+        "metadata": {
+          "isAbstract": true,
+          "parameters": [],
+          "returnType": "string"
+        }
+      },
+      {
+        "title": "_secret",
+        "type": "method",
+        "depth": 2,
+        "line": 27,
+        "metadata": {
+          "visibility": "private",
+          "parameters": [],
+          "returnType": "void"
+        }
+      }
+    ]
+  },
+  {
+    "title": "helper",
+    "type": "function",
+    "depth": 1,
+    "line": 30,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "x",
+          "type": "number"
+        },
+        {
+          "name": "y",
+          "optional": true,
+          "defaultValue": "2"
+        }
+      ],
+      "returnType": "number"
+    }
+  },
+  {
+    "title": "greet",
+    "type": "function",
+    "depth": 1,
+    "line": 34,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "returnType": "string"
+    }
+  }
+]

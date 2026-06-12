@@ -92,10 +92,7 @@ Content here.`;
   });
 
   describe('TypeScript Generation', () => {
-    // PRE-EXISTING GAP: the acorn-based TypeScriptGenerator returns 0 class
-    // members here. The Phase 2 tree-sitter migration fixes this and will
-    // un-skip it. See ROADMAP.md Phase 2 / TECHDEBT.md.
-    it.skip('should extract classes and methods', async () => {
+    it('should extract classes and methods', async () => {
       const content = `
 class Calculator {
   private value: number = 0;
@@ -123,7 +120,11 @@ function helper(x: number): void {
       const calculatorClass = result.find(node => node.title === 'Calculator');
       expect(calculatorClass).toBeDefined();
       expect(calculatorClass!.type).toBe('class');
-      expect(calculatorClass!.children).toHaveLength(3); // constructor, add, create (static methods are included)
+      // constructor, add, create (+ the `value` field — class members are included)
+      const childTitles = (calculatorClass!.children ?? []).map(c => c.title);
+      expect(childTitles).toEqual(
+        expect.arrayContaining(['constructor', 'add', 'create'])
+      );
       
       const helperFunction = result.find(node => node.title === 'helper');
       expect(helperFunction).toBeDefined();

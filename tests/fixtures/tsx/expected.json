@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Props",
+    "type": "interface",
+    "depth": 1,
+    "line": 3
+  },
+  {
+    "title": "Card",
+    "type": "function",
+    "depth": 1,
+    "line": 7,
+    "metadata": {
+      "parameters": [
+        {
+          "name": "{ title }",
+          "type": "Props"
+        }
+      ],
+      "returnType": "JSX.Element"
+    }
+  },
+  {
+    "title": "Widget",
+    "type": "class",
+    "depth": 1,
+    "line": 9,
+    "children": [
+      {
+        "title": "count",
+        "type": "property",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "visibility": "private"
+        }
+      },
+      {
+        "title": "render",
+        "type": "method",
+        "depth": 2,
+        "line": 12,
+        "metadata": {
+          "parameters": [],
+          "returnType": "JSX.Element"
+        }
+      }
+    ]
+  }
+]
