@@ -34,6 +34,7 @@ import { UnsupportedExtensionError } from './errors';
 
 export * from './generators/OutlineGenerator';
 export * from './errors';
+export * from './formatters';
 
 export class DocumentOutlineGenerator {
   private generators: Map<string, OutlineGenerator> = new Map();

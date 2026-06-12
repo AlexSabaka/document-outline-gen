@@ -22,6 +22,16 @@ export class UnsupportedExtensionError extends OutlineError {
   }
 }
 
+/** Thrown when no formatter is registered for an output format. */
+export class UnsupportedFormatError extends OutlineError {
+  constructor(public readonly format: string, available: string[] = []) {
+    super(
+      `No formatter found for format: ${format}` +
+        (available.length ? ` (available: ${available.join(', ')})` : ''),
+    );
+  }
+}
+
 /**
  * Thrown when a generator cannot parse its input. Carries best-effort
  * location context. Generators should prefer degrading to a partial outline
