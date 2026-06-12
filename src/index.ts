@@ -22,6 +22,9 @@ import { KotlinGenerator } from './generators/code/KotlinGenerator';
 import { SwiftGenerator } from './generators/code/SwiftGenerator';
 import { ScalaGenerator } from './generators/code/ScalaGenerator';
 import { LuaGenerator } from './generators/code/LuaGenerator';
+import { TomlGenerator } from './generators/code/TomlGenerator';
+import { IniGenerator } from './generators/IniGenerator';
+import { PropertiesGenerator } from './generators/PropertiesGenerator';
 import { UnsupportedExtensionError } from './errors';
 
 export * from './generators/OutlineGenerator';
@@ -74,6 +77,16 @@ export class DocumentOutlineGenerator {
     this.generators.set('scala', scala);
     this.generators.set('sbt', scala);
     this.generators.set('lua', new LuaGenerator());
+
+    // Phase 5 config & data formats
+    this.generators.set('toml', new TomlGenerator());
+    const ini = new IniGenerator();
+    this.generators.set('ini', ini);
+    this.generators.set('cfg', ini);
+    this.generators.set('conf', ini);
+    const properties = new PropertiesGenerator();
+    this.generators.set('properties', properties);
+    this.generators.set('env', properties);
   }
 
   /**

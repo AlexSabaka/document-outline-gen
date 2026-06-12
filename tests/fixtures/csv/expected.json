@@ -1,0 +1,113 @@
+[
+  {
+    "title": "Columns",
+    "type": "section",
+    "depth": 1,
+    "metadata": {
+      "count": 5
+    },
+    "children": [
+      {
+        "title": "id",
+        "type": "number column",
+        "depth": 2,
+        "metadata": {
+          "index": 0,
+          "type": "number",
+          "dataType": "number",
+          "nullable": false,
+          "uniqueValues": 3,
+          "sampleValues": [
+            "1",
+            "2",
+            "3"
+          ],
+          "minLength": 1,
+          "maxLength": 1,
+          "avgLength": 1,
+          "min": 1,
+          "max": 3
+        }
+      },
+      {
+        "title": "name",
+        "type": "string column",
+        "depth": 2,
+        "metadata": {
+          "index": 1,
+          "type": "string",
+          "dataType": "string",
+          "nullable": false,
+          "uniqueValues": 3,
+          "sampleValues": [
+            "Alice",
+            "Bob",
+            "Carol"
+          ],
+          "minLength": 3,
+          "maxLength": 5,
+          "avgLength": 4.33
+        }
+      },
+      {
+        "title": "email",
+        "type": "email column",
+        "depth": 2,
+        "metadata": {
+          "index": 2,
+          "type": "email",
+          "dataType": "email",
+          "nullable": false,
+          "uniqueValues": 3,
+          "sampleValues": [
+            "alice@example.com",
+            "bob@example.com",
+            "carol@example.com"
+          ],
+          "minLength": 15,
+          "maxLength": 17,
+          "avgLength": 16.33
+        }
+      },
+      {
+        "title": "active",
+        "type": "boolean column",
+        "depth": 2,
+        "metadata": {
+          "index": 3,
+          "type": "boolean",
+          "dataType": "boolean",
+          "nullable": false,
+          "uniqueValues": 2,
+          "sampleValues": [
+            "true",
+            "false"
+          ],
+          "minLength": 4,
+          "maxLength": 5,
+          "avgLength": 4.33
+        }
+      },
+      {
+        "title": "joined",
+        "type": "date column",
+        "depth": 2,
+        "metadata": {
+          "index": 4,
+          "type": "date",
+          "dataType": "date",
+          "nullable": false,
+          "uniqueValues": 3,
+          "sampleValues": [
+            "2021-01-15",
+            "2021-03-22",
+            "2022-07-09"
+          ],
+          "minLength": 10,
+          "maxLength": 10,
+          "avgLength": 10
+        }
+      }
+    ]
+  }
+]

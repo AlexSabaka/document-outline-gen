@@ -366,6 +366,7 @@ export class CsvGenerator extends OutlineGenerator {
           {
             index: column.index,
             type: column.type,
+            dataType: column.type,
             nullable: column.nullable,
             uniqueValues: column.uniqueValues,
             sampleValues: column.sampleValues,

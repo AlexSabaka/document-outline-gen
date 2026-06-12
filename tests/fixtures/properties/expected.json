@@ -1,0 +1,47 @@
+[
+  {
+    "title": "app.name",
+    "type": "property",
+    "depth": 1,
+    "line": 2,
+    "metadata": {
+      "value": "Demo"
+    }
+  },
+  {
+    "title": "app.version",
+    "type": "property",
+    "depth": 1,
+    "line": 3,
+    "metadata": {
+      "value": "1.2.0"
+    }
+  },
+  {
+    "title": "server.port",
+    "type": "property",
+    "depth": 1,
+    "line": 4,
+    "metadata": {
+      "value": "8080"
+    }
+  },
+  {
+    "title": "db.url",
+    "type": "property",
+    "depth": 1,
+    "line": 5,
+    "metadata": {
+      "value": "jdbc:postgresql://localhost/db"
+    }
+  },
+  {
+    "title": "welcome.message",
+    "type": "property",
+    "depth": 1,
+    "line": 6,
+    "metadata": {
+      "value": "hello world"
+    }
+  }
+]

@@ -1,0 +1,19 @@
+# Project configuration
+title = "Example"
+version = "1.0.0"
+
+[server]
+host = "localhost"
+port = 8080
+
+[server.tls]
+enabled = true
+cert = "/etc/cert.pem"
+
+[database]
+url = "postgres://localhost"
+pool = 10
+
+[[products]]
+name = "Widget"
+sku = 12345

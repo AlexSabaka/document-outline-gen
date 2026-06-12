@@ -1,0 +1,63 @@
+[
+  {
+    "title": "appname",
+    "type": "property",
+    "depth": 1,
+    "line": 2,
+    "metadata": {
+      "value": "Demo"
+    }
+  },
+  {
+    "title": "database",
+    "type": "section",
+    "depth": 1,
+    "line": 4,
+    "children": [
+      {
+        "title": "host",
+        "type": "property",
+        "depth": 2,
+        "line": 5,
+        "metadata": {
+          "value": "127.0.0.1"
+        }
+      },
+      {
+        "title": "port",
+        "type": "property",
+        "depth": 2,
+        "line": 6,
+        "metadata": {
+          "value": "5432"
+        }
+      }
+    ]
+  },
+  {
+    "title": "logging",
+    "type": "section",
+    "depth": 1,
+    "line": 8,
+    "children": [
+      {
+        "title": "level",
+        "type": "property",
+        "depth": 2,
+        "line": 9,
+        "metadata": {
+          "value": "debug"
+        }
+      },
+      {
+        "title": "file",
+        "type": "property",
+        "depth": 2,
+        "line": 10,
+        "metadata": {
+          "value": "/var/log/app.log"
+        }
+      }
+    ]
+  }
+]

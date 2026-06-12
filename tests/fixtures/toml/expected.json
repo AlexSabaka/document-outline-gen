@@ -1,0 +1,124 @@
+[
+  {
+    "title": "title",
+    "type": "property",
+    "depth": 1,
+    "line": 2,
+    "metadata": {
+      "value": "\"Example\""
+    }
+  },
+  {
+    "title": "version",
+    "type": "property",
+    "depth": 1,
+    "line": 3,
+    "metadata": {
+      "value": "\"1.0.0\""
+    }
+  },
+  {
+    "title": "server",
+    "type": "section",
+    "depth": 1,
+    "line": 5,
+    "children": [
+      {
+        "title": "host",
+        "type": "property",
+        "depth": 2,
+        "line": 6,
+        "metadata": {
+          "value": "\"localhost\""
+        }
+      },
+      {
+        "title": "port",
+        "type": "property",
+        "depth": 2,
+        "line": 7,
+        "metadata": {
+          "value": "8080"
+        }
+      },
+      {
+        "title": "server.tls",
+        "type": "section",
+        "depth": 2,
+        "line": 9,
+        "children": [
+          {
+            "title": "enabled",
+            "type": "property",
+            "depth": 3,
+            "line": 10,
+            "metadata": {
+              "value": "true"
+            }
+          },
+          {
+            "title": "cert",
+            "type": "property",
+            "depth": 3,
+            "line": 11,
+            "metadata": {
+              "value": "\"/etc/cert.pem\""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "database",
+    "type": "section",
+    "depth": 1,
+    "line": 13,
+    "children": [
+      {
+        "title": "url",
+        "type": "property",
+        "depth": 2,
+        "line": 14,
+        "metadata": {
+          "value": "\"postgres://localhost\""
+        }
+      },
+      {
+        "title": "pool",
+        "type": "property",
+        "depth": 2,
+        "line": 15,
+        "metadata": {
+          "value": "10"
+        }
+      }
+    ]
+  },
+  {
+    "title": "products",
+    "type": "section",
+    "depth": 1,
+    "line": 17,
+    "children": [
+      {
+        "title": "name",
+        "type": "property",
+        "depth": 2,
+        "line": 18,
+        "metadata": {
+          "value": "\"Widget\""
+        }
+      },
+      {
+        "title": "sku",
+        "type": "property",
+        "depth": 2,
+        "line": 19,
+        "metadata": {
+          "value": "12345"
+        }
+      }
+    ]
+  }
+]
